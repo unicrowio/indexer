@@ -1,0 +1,385 @@
+{
+  "resource_version": 59,
+  "metadata": {
+    "version": 3,
+    "sources": [
+      {
+        "name": "default",
+        "kind": "postgres",
+        "tables": [
+          {
+            "table": {
+              "schema": "public",
+              "name": "escrow_status"
+            },
+            "select_permissions": [
+              {
+                "role": "anonymous",
+                "permission": {
+                  "columns": [
+                    "name",
+                    "escrow_id",
+                    "transaction_hash",
+                    "block_number",
+                    "deposit_transaction_hash",
+                    "buyer",
+                    "seller",
+                    "currency",
+                    "amount",
+                    "split_seller",
+                    "split_buyer",
+                    "split_marketplace",
+                    "split_protocol",
+                    "consensus_seller",
+                    "consensus_buyer",
+                    "marketplace",
+                    "marketplace_fee",
+                    "arbitrator",
+                    "arbitrator_fee",
+                    "arbitrator_proposer",
+                    "status_arbitration",
+                    "challenge_period",
+                    "challenge_period_start",
+                    "challenge_period_end",
+                    "challenge_period_extension",
+                    "paid_at",
+                    "released_at",
+                    "refunded_at",
+                    "settled_at",
+                    "challenged_at",
+                    "claimed",
+                    "arbitrated",
+                    "latest_settlement_offer_address",
+                    "latest_settlement_offer_seller",
+                    "latest_settlement_offer_buyer",
+                    "amount_seller",
+                    "amount_buyer",
+                    "amount_protocol",
+                    "amount_arbitrator",
+                    "amount_marketplace"
+                  ],
+                  "filter": {},
+                  "allow_aggregations": true
+                }
+              },
+              {
+                "role": "public",
+                "permission": {
+                  "columns": [
+                    "name",
+                    "escrow_id",
+                    "transaction_hash",
+                    "block_number",
+                    "deposit_transaction_hash",
+                    "buyer",
+                    "seller",
+                    "currency",
+                    "amount",
+                    "split_seller",
+                    "split_buyer",
+                    "split_marketplace",
+                    "split_protocol",
+                    "consensus_seller",
+                    "consensus_buyer",
+                    "marketplace",
+                    "marketplace_fee",
+                    "arbitrator",
+                    "arbitrator_fee",
+                    "arbitrator_proposer",
+                    "status_arbitration",
+                    "challenge_period",
+                    "challenge_period_start",
+                    "challenge_period_end",
+                    "challenge_period_extension",
+                    "paid_at",
+                    "released_at",
+                    "refunded_at",
+                    "settled_at",
+                    "challenged_at",
+                    "claimed",
+                    "arbitrated",
+                    "latest_settlement_offer_address",
+                    "latest_settlement_offer_seller",
+                    "latest_settlement_offer_buyer",
+                    "amount_seller",
+                    "amount_buyer",
+                    "amount_protocol",
+                    "amount_arbitrator",
+                    "amount_marketplace"
+                  ],
+                  "filter": {},
+                  "allow_aggregations": true
+                }
+              }
+            ],
+            "event_triggers": [
+              {
+                "name": "crow-sync",
+                "definition": {
+                  "enable_manual": true,
+                  "insert": {
+                    "columns": "*"
+                  },
+                  "update": {
+                    "columns": "*"
+                  }
+                },
+                "retry_conf": {
+                  "num_retries": 9,
+                  "interval_sec": 10,
+                  "timeout_sec": 60
+                },
+                "webhook": "http://host.docker.internal:3000/api/sync",
+                "headers": [
+                  {
+                    "value": "superpasswd",
+                    "name": "x-hasura-secret-key"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "table": {
+              "schema": "public",
+              "name": "escrow_status_view"
+            },
+            "select_permissions": [
+              {
+                "role": "anonymous",
+                "permission": {
+                  "columns": [
+                    "name",
+                    "escrow_id",
+                    "transaction_hash",
+                    "block_number",
+                    "deposit_transaction_hash",
+                    "buyer",
+                    "seller",
+                    "currency",
+                    "amount",
+                    "split_seller",
+                    "split_buyer",
+                    "split_marketplace",
+                    "split_protocol",
+                    "consensus_seller",
+                    "consensus_buyer",
+                    "marketplace",
+                    "marketplace_fee",
+                    "arbitrator",
+                    "arbitrator_fee",
+                    "arbitrator_proposer",
+                    "status_arbitration",
+                    "challenge_period",
+                    "challenge_period_start",
+                    "challenge_period_end",
+                    "challenge_period_extension",
+                    "paid_at",
+                    "released_at",
+                    "refunded_at",
+                    "settled_at",
+                    "challenged_at",
+                    "claimed",
+                    "arbitrated",
+                    "latest_settlement_offer_address",
+                    "latest_settlement_offer_seller",
+                    "latest_settlement_offer_buyer",
+                    "amount_seller",
+                    "amount_buyer",
+                    "amount_protocol",
+                    "amount_arbitrator",
+                    "amount_marketplace",
+                    "status"
+                  ],
+                  "filter": {},
+                  "allow_aggregations": true
+                }
+              },
+              {
+                "role": "public",
+                "permission": {
+                  "columns": [
+                    "name",
+                    "escrow_id",
+                    "transaction_hash",
+                    "block_number",
+                    "deposit_transaction_hash",
+                    "buyer",
+                    "seller",
+                    "currency",
+                    "amount",
+                    "split_seller",
+                    "split_buyer",
+                    "split_marketplace",
+                    "split_protocol",
+                    "consensus_seller",
+                    "consensus_buyer",
+                    "marketplace",
+                    "marketplace_fee",
+                    "arbitrator",
+                    "arbitrator_fee",
+                    "arbitrator_proposer",
+                    "status_arbitration",
+                    "challenge_period",
+                    "challenge_period_start",
+                    "challenge_period_end",
+                    "challenge_period_extension",
+                    "paid_at",
+                    "released_at",
+                    "refunded_at",
+                    "settled_at",
+                    "challenged_at",
+                    "claimed",
+                    "arbitrated",
+                    "latest_settlement_offer_address",
+                    "latest_settlement_offer_seller",
+                    "latest_settlement_offer_buyer",
+                    "amount_seller",
+                    "amount_buyer",
+                    "amount_protocol",
+                    "amount_arbitrator",
+                    "amount_marketplace",
+                    "status"
+                  ],
+                  "filter": {},
+                  "allow_aggregations": true
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "schema": "public",
+              "name": "events"
+            },
+            "select_permissions": [
+              {
+                "role": "anonymous",
+                "permission": {
+                  "columns": [
+                    "id",
+                    "name",
+                    "transaction_hash",
+                    "block_number",
+                    "escrow_id",
+                    "buyer",
+                    "seller",
+                    "currency",
+                    "amount",
+                    "split_seller",
+                    "split_buyer",
+                    "split_marketplace",
+                    "split_protocol",
+                    "consensus_seller",
+                    "consensus_buyer",
+                    "marketplace",
+                    "marketplace_fee",
+                    "challenge_period",
+                    "challenge_period_start",
+                    "challenge_period_end",
+                    "challenge_period_extension",
+                    "created_at",
+                    "arbitrator",
+                    "arbitrator_fee",
+                    "arbitrator_proposer",
+                    "latest_settlement_offer_address",
+                    "latest_settlement_offer_seller",
+                    "latest_settlement_offer_buyer",
+                    "amount_seller",
+                    "amount_buyer",
+                    "amount_protocol",
+                    "amount_arbitrator",
+                    "amount_marketplace"
+                  ],
+                  "filter": {},
+                  "allow_aggregations": true
+                }
+              },
+              {
+                "role": "public",
+                "permission": {
+                  "columns": [
+                    "id",
+                    "name",
+                    "transaction_hash",
+                    "block_number",
+                    "escrow_id",
+                    "buyer",
+                    "seller",
+                    "currency",
+                    "amount",
+                    "split_seller",
+                    "split_buyer",
+                    "split_marketplace",
+                    "split_protocol",
+                    "consensus_seller",
+                    "consensus_buyer",
+                    "marketplace",
+                    "marketplace_fee",
+                    "challenge_period",
+                    "challenge_period_start",
+                    "challenge_period_end",
+                    "challenge_period_extension",
+                    "created_at",
+                    "arbitrator",
+                    "arbitrator_fee",
+                    "arbitrator_proposer",
+                    "latest_settlement_offer_address",
+                    "latest_settlement_offer_seller",
+                    "latest_settlement_offer_buyer",
+                    "amount_seller",
+                    "amount_buyer",
+                    "amount_protocol",
+                    "amount_arbitrator",
+                    "amount_marketplace"
+                  ],
+                  "filter": {},
+                  "allow_aggregations": true
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "schema": "public",
+              "name": "last_block_number"
+            },
+            "select_permissions": [
+              {
+                "role": "anonymous",
+                "permission": {
+                  "columns": ["block_number", "id"],
+                  "filter": {},
+                  "allow_aggregations": true
+                }
+              },
+              {
+                "role": "public",
+                "permission": {
+                  "columns": ["block_number", "id"],
+                  "filter": {},
+                  "allow_aggregations": true
+                }
+              }
+            ]
+          }
+        ],
+        "configuration": {
+          "connection_info": {
+            "use_prepared_statements": true,
+            "database_url": {
+              "from_env": "HASURA_GRAPHQL_DATABASE_URL"
+            },
+            "isolation_level": "read-committed",
+            "pool_settings": {
+              "connection_lifetime": 600,
+              "retries": 1,
+              "idle_timeout": 180,
+              "max_connections": 50
+            }
+          }
+        }
+      }
+    ]
+  }
+}

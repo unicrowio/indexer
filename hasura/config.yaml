@@ -1,0 +1,12 @@
+version:
+  3
+  # Prod: HASURA_GRAPHQL_ENDPOINT
+  # Dev: http://localhost:8080
+endpoint: http://localhost:8080
+metadata_directory: metadata
+actions:
+  kind:
+    synchronous
+    # Prod: HASURA_GRAPHQL_ENDPOINT
+    # Dev: http://localhost:8080
+  handler_webhook_baseurl: http://localhost:8080

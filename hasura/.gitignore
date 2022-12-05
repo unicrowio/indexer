@@ -1,0 +1,28 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+indexer-api/node_modules
+indexer-api/.pnp.js
+indexer-api/.env
+# testing
+indexer-api/coverage
+
+# production
+indexer-api/build
+indexer-api/lib
+
+# misc
+.DS_Store
+hasura/.DS_Store
+indexer-api/.DS_Store
+indexer-api/*.pem
+/.vscode
+indexer-api/.env
+# debug
+indexer-api/npm-debug.log*
+indexer-api/yarn-debug.log*
+indexer-api/yarn-error.log*
+
+# eslint
+indexer-api/.eslintcache
+.env

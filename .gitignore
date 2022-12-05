@@ -1,0 +1,6 @@
+.DS_store
+.env
+build
+.vscode
+node_modules
+.pnpm-debug.log

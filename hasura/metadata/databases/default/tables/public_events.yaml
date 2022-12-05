@@ -1,0 +1,41 @@
+table:
+  name: events
+  schema: public
+select_permissions:
+  - permission:
+      allow_aggregations: true
+      columns:
+        - id
+        - name
+        - transaction_hash
+        - block_number
+        - escrow_id
+        - buyer
+        - seller
+        - currency
+        - amount
+        - split_seller
+        - split_buyer
+        - split_marketplace
+        - split_protocol
+        - consensus_seller
+        - consensus_buyer
+        - marketplace
+        - marketplace_fee
+        - challenge_period
+        - challenge_period_start
+        - challenge_period_end
+        - challenge_period_extension
+        - created_at
+        - arbitrator
+        - arbitrator_fee
+        - latest_settlement_offer_address
+        - latest_settlement_offer_seller
+        - latest_settlement_offer_buyer
+        - amount_seller
+        - amount_buyer
+        - amount_protocol
+        - amount_arbitrator
+        - amount_marketplace
+      filter: {}
+    role: public

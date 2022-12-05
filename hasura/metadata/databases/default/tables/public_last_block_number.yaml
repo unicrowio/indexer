@@ -1,0 +1,11 @@
+table:
+  name: last_block_number
+  schema: public
+select_permissions:
+  - permission:
+      allow_aggregations: true
+      columns:
+        - block_number
+        - id
+      filter: {}
+    role: public
