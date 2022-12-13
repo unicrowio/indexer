@@ -8,8 +8,8 @@ export type EventName =
   | 'ArbitratorProposed'
   | 'ArbitratorApproved'
   | 'Arbitrated'
+  | 'ClaimMultiple'
   | 'Claim'
-  | 'SingleClaim'
 
 export type EventMutationInput = {
   name: EventName

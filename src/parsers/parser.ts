@@ -19,7 +19,7 @@ const position = {
   AMOUNT: 11
 }
 
-const parseSingleClaim = (e: IEvent): EventMutationInput => {
+const parseClaim = (e: IEvent): EventMutationInput => {
   const [escrow_id, payments] = e.args[0]
 
   const [
@@ -43,7 +43,7 @@ const parseSingleClaim = (e: IEvent): EventMutationInput => {
   }
 }
 
-const parseClaim = (e: IEvent): EventMutationInput[] => {
+const parseClaimMultiple = (e: IEvent): EventMutationInput[] => {
   return e.args[0].map((item: any) => {
     const [escrow_id, payments] = item
 
@@ -74,11 +74,11 @@ export const parse = (e: IEvent) => {
 
   const event = e.event
 
+  if (event === Event.ClaimMultiple) {
+    return parseClaimMultiple(e)
+  }
   if (event === Event.Claim) {
     return parseClaim(e)
-  }
-  if (event === Event.SingleClaim) {
-    return parseSingleClaim(e)
   }
 
   const escrow_id = 'escrowId' in e.args && e.args.escrowId.toNumber()

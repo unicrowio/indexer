@@ -23,8 +23,8 @@ enum Event {
   ArbitratorProposed = 'ArbitratorProposed',
   ArbitratorApproved = 'ArbitratorApproved',
   Arbitrated = 'Arbitrated',
-  Claim = 'Claim',
-  SingleClaim = 'SingleClaim'
+  ClaimMultiple = 'ClaimMultiple',
+  Claim = 'Claim'
 }
 
 const _EVENTS = [
@@ -37,8 +37,8 @@ const _EVENTS = [
   Event.ArbitratorProposed,
   Event.ArbitratorApproved,
   Event.Arbitrated,
-  Event.Claim,
-  Event.SingleClaim
+  Event.ClaimMultiple,
+  Event.Claim
 ]
 
 export { CONSENSUS, SPLIT, Event, _EVENTS }
