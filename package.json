@@ -42,7 +42,7 @@
     "@types/koa-graphql": "^0.8.7",
     "@types/koa-router": "7.4.4",
     "@types/node": "^18.11.11",
-    "@unicrowio/ethers-types": "^0.0.8",
+    "@unicrowio/ethers-types": "^0.0.9",
     "babel-loader": "9.1.0",
     "tsup": "^6.5.0",
     "typescript": "4.9.3"
