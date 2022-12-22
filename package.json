@@ -10,11 +10,15 @@
     "build/"
   ],
   "scripts": {
+    "prepare": "husky install",
     "heroku-prebuild": "./heroku.sh",
     "start": "pm2-runtime start ecosystem.config.js --env production",
     "start:dev": "tsup --onSuccess \"pnpm start\"",
     "dev": "tsup --watch --onSuccess \"pnpm start\"",
-    "build": "tsup"
+    "build": "tsup",
+    "lint": "rome check src/ --verbose",
+    "lint:fix": "rome check src/ --apply-suggested",
+    "format": "rome format src/ --write"
   },
   "dependencies": {
     "@sentry/node": "7.23.0",
@@ -45,7 +49,9 @@
     "@unicrowio/ethers-types": "^0.0.9",
     "babel-loader": "9.1.0",
     "tsup": "^6.5.0",
-    "typescript": "4.9.3"
+    "typescript": "4.9.3",
+    "husky": "^8.0.0",
+    "rome": "^11.0.0"
   },
   "lint-staged": {
     "./src/**/*.{ts,js}": [

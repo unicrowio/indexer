@@ -848,6 +848,36 @@
   dependencies:
     debug "^4.3.1"
 
+"@rometools/cli-darwin-arm64@11.0.0":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@rometools/cli-darwin-arm64/-/cli-darwin-arm64-11.0.0.tgz#8f916df0580fede2325434a50ed5b1f2cf972696"
+  integrity sha512-F3vkdY+s3FLIEnAjSbyHTuIPB88cLpccimW4ecid5I7S6GzGG3iUJI4xT00JhH73K4P/qW20/9r+kH1T9Du8Xg==
+
+"@rometools/cli-darwin-x64@11.0.0":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@rometools/cli-darwin-x64/-/cli-darwin-x64-11.0.0.tgz#1393a5bba26e8c5352737270a1a98f2759f40d14"
+  integrity sha512-X6jhtS6Iml4GOzgNtnLwIp/KXXhSdqeVyfv69m/AHnIzx3gQAjPZ7BPnJLvTCbhe4SKHL+uTZYFSCJpkUUKE6w==
+
+"@rometools/cli-linux-arm64@11.0.0":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@rometools/cli-linux-arm64/-/cli-linux-arm64-11.0.0.tgz#efbfd36013455fc5d940b24b1b195a43aba87bcb"
+  integrity sha512-dktTJJlTpmycBZ2TwhJBcAO8ztK8DdevdyZnFFxdYRvtmJgTjIsC2UFayf/SbKew8B8q1IhI0it+D6ihAeIpeg==
+
+"@rometools/cli-linux-x64@11.0.0":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@rometools/cli-linux-x64/-/cli-linux-x64-11.0.0.tgz#675532d9f603b88ab0686da800ec711b45d22085"
+  integrity sha512-WVcnXPNdWGUWo0p4NU8YzuthjYR7q+b4vRcjdxtP1DlpphZmSsoC/RSE85nEqRAz8hChcKUansVzOPM8BSsuGA==
+
+"@rometools/cli-win32-arm64@11.0.0":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@rometools/cli-win32-arm64/-/cli-win32-arm64-11.0.0.tgz#4d50f446acf2bc126cb58b5cff5a4d53b7c6a378"
+  integrity sha512-tPj6RThQzS7Q45jqQll7NlTYvNcsg/BEP3LYiiazqSh9FAFnMkrV6ewUcMPKWyAfiyLs7jlz4rRvdNRUSygzfQ==
+
+"@rometools/cli-win32-x64@11.0.0":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@rometools/cli-win32-x64/-/cli-win32-x64-11.0.0.tgz#c6d48db5ea52b393dae7fe04bfe803ad8cee71a5"
+  integrity sha512-bmBai8WHxYjsGk1+je7ZTfCUCWq30WJI3pQM8pzTA674lfGTZ9ymJoZwTaIMSO4rL5V9mlO6uLunsBKso9VqOg==
+
 "@sentry/core@7.23.0":
   version "7.23.0"
   resolved "https://registry.yarnpkg.com/@sentry/core/-/core-7.23.0.tgz#d320b2b6e5620b41f345bc01d69b547cdf28f78d"
@@ -2306,6 +2336,11 @@ human-signals@^2.1.0:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-2.1.0.tgz#dc91fcba42e4d06e4abaed33b3e7a3c02f514ea0"
   integrity sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==
 
+husky@^8.0.0:
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-8.0.2.tgz#5816a60db02650f1f22c8b69b928fd6bcd77a236"
+  integrity sha512-Tkv80jtvbnkK3mYWxPZePGFpQ/tT3HNSs/sasF9P2YfkMezDl3ON37YN6jUUI4eTg5LcyVynlb6r4eyvOmspvg==
+
 iconv-lite@0.4.24, iconv-lite@^0.4.4:
   version "0.4.24"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
@@ -3235,6 +3270,18 @@ rollup@^3.2.5:
   integrity sha512-qCgiBeSu2/AIOKWGFMiRkjPlGlcVwxAjwpGKQZOQYng+83Hip4PjrWHm7EQX1wnrvRqfTytEihRRfLHdX+hR4g==
   optionalDependencies:
     fsevents "~2.3.2"
+
+rome@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/rome/-/rome-11.0.0.tgz#cd2f00fadfd3611399eba9a2f87612e1f3299a23"
+  integrity sha512-rRo6JOwpMLc3OkeTDRXkrmrDqnxDvZ75GS4f0jLDBNmRgDXWbu0F8eVnJoRn+VbK2AE7vWvhVOMBjnWowcopkQ==
+  optionalDependencies:
+    "@rometools/cli-darwin-arm64" "11.0.0"
+    "@rometools/cli-darwin-x64" "11.0.0"
+    "@rometools/cli-linux-arm64" "11.0.0"
+    "@rometools/cli-linux-x64" "11.0.0"
+    "@rometools/cli-win32-arm64" "11.0.0"
+    "@rometools/cli-win32-x64" "11.0.0"
 
 run-parallel@^1.1.9:
   version "1.2.0"

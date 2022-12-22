@@ -2,7 +2,7 @@
 
 enum CONSENSUS {
   Buyer = 0,
-  Seller = 1
+  Seller = 1,
 }
 
 enum SPLIT {
@@ -10,21 +10,21 @@ enum SPLIT {
   Seller = 1,
   Marketplace = 2,
   Protocol = 3,
-  Arbitrator = 4
+  Arbitrator = 4,
 }
 
 enum Event {
-  Pay = 'Pay',
-  Release = 'Release',
-  Refund = 'Refund',
-  Challenge = 'Challenge',
-  SettlementOffer = 'SettlementOffer',
-  ApproveOffer = 'ApproveOffer',
-  ArbitratorProposed = 'ArbitratorProposed',
-  ArbitratorApproved = 'ArbitratorApproved',
-  Arbitrated = 'Arbitrated',
-  ClaimMultiple = 'ClaimMultiple',
-  Claim = 'Claim'
+  Pay = "Pay",
+  Release = "Release",
+  Refund = "Refund",
+  Challenge = "Challenge",
+  SettlementOffer = "SettlementOffer",
+  ApproveOffer = "ApproveOffer",
+  ArbitratorProposed = "ArbitratorProposed",
+  ArbitratorApproved = "ArbitratorApproved",
+  Arbitrated = "Arbitrated",
+  ClaimMultiple = "ClaimMultiple",
+  Claim = "Claim",
 }
 
 const _EVENTS = [
@@ -38,7 +38,7 @@ const _EVENTS = [
   Event.ArbitratorApproved,
   Event.Arbitrated,
   Event.ClaimMultiple,
-  Event.Claim
-]
+  Event.Claim,
+];
 
-export { CONSENSUS, SPLIT, Event, _EVENTS }
+export { CONSENSUS, SPLIT, Event, _EVENTS };

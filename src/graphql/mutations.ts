@@ -1,4 +1,4 @@
-import { gql } from 'graphql-request'
+import { gql } from "graphql-request";
 
 export const bulkInsertEventsMutation = gql`
   mutation createEvents($events: [events_insert_input!]!, $blockNumber: Int!) {
@@ -13,4 +13,4 @@ export const bulkInsertEventsMutation = gql`
       block_number
     }
   }
-`
+`;
