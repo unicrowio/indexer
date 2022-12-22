@@ -1,4 +1,4 @@
-import { gql } from 'graphql-request'
+import { gql } from "graphql-request";
 
 export const getBlockNumberQuery = gql`
   query getBlockNumber {
@@ -6,4 +6,4 @@ export const getBlockNumberQuery = gql`
       block_number
     }
   }
-`
+`;

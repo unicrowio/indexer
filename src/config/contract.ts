@@ -27,23 +27,23 @@ export const getContracts = (): IContracts => {
 
   const unicrow: Unicrow = Unicrow__factory.connect(
     env.UNICROW_ADDRESS,
-    provider
+    provider,
   );
 
   const unicrowDispute: UnicrowDispute = UnicrowDispute__factory.connect(
     env.UNICROW_DISPUTE_ADDRESS,
-    provider
+    provider,
   );
 
   const unicrowArbitrator: UnicrowArbitrator =
     UnicrowArbitrator__factory.connect(
       env.UNICROW_ARBITRATOR_ADDRESS,
-      provider
+      provider,
     );
 
   const unicrowClaim: UnicrowClaim = UnicrowClaim__factory.connect(
     env.UNICROW_CLAIM_ADDRESS,
-    provider
+    provider,
   );
   return { unicrow, unicrowDispute, unicrowArbitrator, unicrowClaim };
 };

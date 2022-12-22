@@ -1,68 +1,68 @@
-import { _EVENTS } from '../parsers/constants'
-import { getContracts, getProvider } from '../config/contract'
-import { getBlockNumber, multipleInserts } from '../graphql/functions'
-import { parse } from '../parsers/parser'
+import { _EVENTS } from "../parsers/constants";
+import { getContracts, getProvider } from "../config/contract";
+import { getBlockNumber, multipleInserts } from "../graphql/functions";
+import { parse } from "../parsers/parser";
 
-import { EventMutationInput } from '../types'
+import { EventMutationInput } from "../types";
 
-import logger from '../infra/logger'
+import logger from "../infra/logger";
 
 export const storeEvents = async () => {
   const { unicrow, unicrowDispute, unicrowArbitrator, unicrowClaim } =
-    getContracts()
+    getContracts();
 
-  const lastBlockNumberInDatabase: number = await getBlockNumber()
+  const lastBlockNumberInDatabase: number = await getBlockNumber();
 
-  const provider = getProvider()
-  const latestBlockNumberBlockchain = await provider.getBlockNumber()
+  const provider = getProvider();
+  const latestBlockNumberBlockchain = await provider.getBlockNumber();
 
   // Job no need to execute if lastBlockNumberInDatabase is lower or equal to latestBlockNumberBlockchain
-  if (latestBlockNumberBlockchain <= lastBlockNumberInDatabase) return
+  if (latestBlockNumberBlockchain <= lastBlockNumberInDatabase) return;
 
-  const lastBlockNumberInDatabasePlusOne = lastBlockNumberInDatabase + 1
+  const lastBlockNumberInDatabasePlusOne = lastBlockNumberInDatabase + 1;
 
   const allEventsFromUnicrowCore = await unicrow.queryFilter(
-    '*' as any,
+    "*" as any,
     lastBlockNumberInDatabasePlusOne,
-    latestBlockNumberBlockchain
-  )
+    latestBlockNumberBlockchain,
+  );
 
   const allEventsFromUnicrowDispute = await unicrowDispute.queryFilter(
-    '*' as any,
+    "*" as any,
     lastBlockNumberInDatabasePlusOne,
-    latestBlockNumberBlockchain
-  )
+    latestBlockNumberBlockchain,
+  );
 
   const allEventsFromUnicrowArbitrator = await unicrowArbitrator.queryFilter(
-    '*' as any,
+    "*" as any,
     lastBlockNumberInDatabasePlusOne,
-    latestBlockNumberBlockchain
-  )
+    latestBlockNumberBlockchain,
+  );
 
   const allEventsFromUnicrowClaim = await unicrowClaim.queryFilter(
-    '*' as any,
+    "*" as any,
     lastBlockNumberInDatabasePlusOne,
-    latestBlockNumberBlockchain
-  )
+    latestBlockNumberBlockchain,
+  );
 
   const merge: any = [
     ...allEventsFromUnicrowCore,
     ...allEventsFromUnicrowDispute,
     ...allEventsFromUnicrowArbitrator,
-    ...allEventsFromUnicrowClaim
-  ]
+    ...allEventsFromUnicrowClaim,
+  ];
 
-  const events = merge.sort((a: any, b: any) => a.blockNumber - b.blockNumber)
+  const events = merge.sort((a: any, b: any) => a.blockNumber - b.blockNumber);
 
   const parsedEvents = events
     .filter((e: any) => _EVENTS.includes(e.event)) // ignore the OwnershipTransferred event and others not related to the indexer
     .map((event: any) => {
-      return parse(event)
+      return parse(event);
     })
-    .flat() as EventMutationInput[]
+    .flat() as EventMutationInput[];
 
-  logger.info(`⌗ Storing the events`)
+  logger.info(`⌗ Storing the events`);
   if (parsedEvents.length > 0) {
-    await multipleInserts(parsedEvents, latestBlockNumberBlockchain)
+    await multipleInserts(parsedEvents, latestBlockNumberBlockchain);
   }
-}
+};
