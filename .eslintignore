@@ -1,7 +1,0 @@
-lib/
-/*.js
-.vscode
-node_modules/
-.github/
-src/contractTypes/
-api/src/contractTypes/
