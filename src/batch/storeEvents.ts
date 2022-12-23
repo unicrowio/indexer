@@ -56,13 +56,14 @@ export const storeEvents = async () => {
 
   const parsedEvents = events
     .filter((e: any) => _EVENTS.includes(e.event)) // ignore the OwnershipTransferred event and others not related to the indexer
-    .map((event: any) => {
+    .flatMap((event: any) => {
       return parse(event);
-    })
-    .flat() as EventMutationInput[];
+    }) as EventMutationInput[];
 
-  logger.info(`⌗ Storing the events`);
-  if (parsedEvents.length > 0) {
-    await multipleInserts(parsedEvents, latestBlockNumberBlockchain);
-  }
+  logger.info("⌗ Storing the events");
+  // only update the block_number with latest from blockchain OR store events and update block_number too
+  await multipleInserts(
+    parsedEvents.length > 0 ? parsedEvents : [],
+    latestBlockNumberBlockchain,
+  );
 };
