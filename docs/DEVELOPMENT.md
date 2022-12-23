@@ -52,7 +52,7 @@ In the terminal you can run the command bellow, it should display all the servic
 docker ps
 
 CONTAINER ID   IMAGE                                                        COMMAND                  CREATED          STATUS          PORTS                              NAMES
-f346932bd5a9   escrow                                                       "docker-entrypoint.s…"   17 minutes ago   Up 17 minutes   5000/tcp, 0.0.0.0:5555->5555/tcp   crow-indexer-api
+f346932bd5a9   escrow                                                       "docker-entrypoint.s…"   17 minutes ago   Up 17 minutes   5000/tcp, 0.0.0.0:5555->5555/tcp   unicrow-indexer-api
 d02ecf83bc10   fedormelexin/graphql-engine-arm64:latest.cli-migrations-v3   "docker-entrypoint.s…"   17 minutes ago   Up 17 minutes   0.0.0.0:8080->8080/tcp             crow-indexer_graphql-engine_1
 7bef13d2498a   postgres:12                                                  "docker-entrypoint.s…"   17 minutes ago   Up 17 minutes   0.0.0.0:5432->5432/tcp             crow-indexer_postgres_1
 ```

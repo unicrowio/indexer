@@ -32,12 +32,12 @@ services:
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       HASURA_WEBHOOK_URL: ${HASURA_WEBHOOK_URL}
       HASURA_WEBHOOK_SECRET_HEADER: ${HASURA_WEBHOOK_SECRET_HEADER}
-      HASURA_GRAPHQL_ADMIN_SECRET: ${ADMIN_SECRET}
+      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: ${HASURA_GRAPHQL_UNAUTHORIZED_ROLE}
   api:
     image: escrow
     build: .
-    container_name: crow-indexer-api
+    container_name: unicrow-indexer-api
     restart: unless-stopped
     ports:
       - '5555:5555'
@@ -52,6 +52,8 @@ services:
       UNICROW_CLAIM_ADDRESS: ${UNICROW_CLAIM_ADDRESS}
       HASURA_GRAPHQL_URL: ${HASURA_GRAPHQL_URL}
       CROW_INDEXER_HOST: ${CROW_INDEXER_HOST}
+            HASURA_WEBHOOK_SECRET_HEADER: ${HASURA_WEBHOOK_SECRET_HEADER}
+
 
 volumes:
   db_data:

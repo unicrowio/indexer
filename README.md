@@ -7,6 +7,9 @@ Crow Indexer & Querying
 ## 🛠 Pre Requirements
 
 1. Install [Docker](https://docs.docker.com/get-started/)
+2. Get AUTH_TOKEN NPM [here](https://www.npmjs.com/settings/YOUR_USER/tokens), and inside of Dockerfile replace the content:
+   - _ENV NPM_TOKEN="REPLACE BY YOUR NPM AUTH_TOKEN (type on terminal: cat ~/.npmrc)"_
+
 
 ## 🚀 Getting Started
 
@@ -51,13 +54,13 @@ Hasura running: [http://localhost:8080](http://localhost:8080)
 <details><summary>Macbook users</summary>
 <p>
 
-1. List all container running
+1. List all containers running
 
 ```
 docker ps
 ```
 
-2. Stop all container
+2. Stop all containers
 
 ```
 docker-compose -f docker-compose.mac.yml down
@@ -87,13 +90,13 @@ docker system prune -a --volumes
 <details><summary>Linux (Ubuntu) users</summary>
 <p>
 
-1. List all container running
+1. List all containers running
 
 ```
 docker ps
 ```
 
-2. Stop all container
+2. Stop all containers
 
 ```
 docker-compose -f docker-compose.linux.yml down
