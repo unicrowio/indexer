@@ -10,7 +10,7 @@ services:
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   graphql-engine:
-    image: fedormelexin/graphql-engine-arm64:latest.cli-migrations-v3
+    image: hasura/graphql-engine:v2.0.4.cli-migrations-v3
     ports:
       - '8080:8080'
     depends_on:
@@ -32,12 +32,12 @@ services:
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       HASURA_WEBHOOK_URL: ${HASURA_WEBHOOK_URL}
       HASURA_WEBHOOK_SECRET_HEADER: ${HASURA_WEBHOOK_SECRET_HEADER}
-      HASURA_GRAPHQL_ADMIN_SECRET: ${ADMIN_SECRET}
+      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: ${HASURA_GRAPHQL_UNAUTHORIZED_ROLE}
   api:
     image: escrow
     build: .
-    container_name: crow-indexer-api
+    container_name: unicrow-indexer-api
     restart: unless-stopped
     ports:
       - '5555:5555'

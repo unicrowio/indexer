@@ -10,15 +10,15 @@ services:
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   graphql-engine:
-    image: hasura/graphql-engine:v2.0.4.cli-migrations-v3
+    image: fedormelexin/graphql-engine-arm64:latest.cli-migrations-v3
     ports:
       - '8080:8080'
     depends_on:
       - 'postgres'
     restart: unless-stopped
     volumes:
-      - ./migrations:/hasura-migrations
-      - ./metadata:/hasura-metadata
+      - ./hasura/migrations:/hasura-migrations
+      - ./hasura/metadata:/hasura-metadata
     environment:
       HASURA_GRAPHQL_DATABASE_URL: ${DATABASE_URL}
       ## postgres database to store Hasura metadata
@@ -32,12 +32,12 @@ services:
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       HASURA_WEBHOOK_URL: ${HASURA_WEBHOOK_URL}
       HASURA_WEBHOOK_SECRET_HEADER: ${HASURA_WEBHOOK_SECRET_HEADER}
-      HASURA_GRAPHQL_ADMIN_SECRET: ${ADMIN_SECRET}
+      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: ${HASURA_GRAPHQL_UNAUTHORIZED_ROLE}
   api:
     image: escrow
     build: .
-    container_name: crow-indexer-api
+    container_name: unicrow-indexer-api
     restart: unless-stopped
     ports:
       - '5555:5555'
@@ -52,6 +52,7 @@ services:
       UNICROW_CLAIM_ADDRESS: ${UNICROW_CLAIM_ADDRESS}
       HASURA_GRAPHQL_URL: ${HASURA_GRAPHQL_URL}
       CROW_INDEXER_HOST: ${CROW_INDEXER_HOST}
+      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
 
 volumes:
   db_data:
