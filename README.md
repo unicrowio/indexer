@@ -2,18 +2,24 @@
 
 ## 💻 About
 
-Crow Indexer & Querying
+The indexer listens to and optionally filters events from Unicrow smart contracts and maintains an up-to-date record of all escrowed payments relevant for the developer. 
 
-## 🛠 Pre Requirements
+Check out [Unicrow SDK Tutorial](https://github.com/unicrowio/sdk-tutorial) to learn how to query the indexed data.
 
-1. Install [Docker](https://docs.docker.com/get-started/)
-2. Get AUTH_TOKEN NPM [here](https://www.npmjs.com/settings/YOUR_USER/tokens), and inside of Dockerfile replace the content:
-   - _ENV NPM_TOKEN="REPLACE BY YOUR NPM AUTH_TOKEN (type on terminal: cat ~/.npmrc)"_
+## 🛠 Prerequisites
+
+Install [Docker](https://docs.docker.com/get-started/)
 
 
 ## 🚀 Getting Started
 
-<details><summary>Macbook users</summary>
+### Configuration
+
+_*tbd*_
+
+### Running the Container
+
+<details><summary>Macbook</summary>
 <p>
 
 ```
@@ -23,7 +29,7 @@ docker-compose --env-file .env.mac -f docker-compose.mac.yml up -d
 </p>
 </details>
 
-<details><summary>Linux (Ubuntu) users</summary>
+<details><summary>Linux (Ubuntu)</summary>
 <p>
 
 ```
@@ -33,7 +39,7 @@ docker-compose --env-file .env.linux -f docker-compose.linux.yml up -d
 </p>
 </details>
 
-<details><summary>Windows WSL 2.0 (Ubuntu) users</summary>
+<details><summary>Windows WSL 2.0 (Ubuntu)</summary>
 <p>
 
 ```
@@ -43,11 +49,9 @@ docker-compose --env-file .env.wsl -f docker-compose.wsl.yml up -d
 </p>
 </details>
 
-🚀 Done!
-
-API running: [http://localhost:5555](http://localhost:5555)
-
-Hasura running: [http://localhost:8080](http://localhost:8080)
+### Verification:
+* API running: [http://localhost:5555](http://localhost:5555)
+* Hasura running: [http://localhost:8080](http://localhost:8080)
 
 ## ⌨️ Useful commands
 
