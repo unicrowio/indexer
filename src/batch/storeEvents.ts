@@ -6,6 +6,7 @@ import { TypedEvent } from "@unicrowio/ethers-types/types/common";
 import { EventMutationInput } from "../types";
 import logger from "../infra/logger";
 
+// Limit of the events I can get from blockchain per time. Ex: from: 0 to: 10000
 const LIMIT = 10000;
 
 export const storeEvents = async () => {
