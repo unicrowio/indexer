@@ -13,10 +13,14 @@ export const storeEvents = async () => {
   const { unicrow, unicrowDispute, unicrowArbitrator, unicrowClaim } =
     getContracts();
 
-  const lastBlockNumberInDatabase: number = await getBlockNumber();
+  const lastBlockNumberInDatabase: number = await getBlockNumber(); // 46137077 
 
   const provider = getProvider();
-  const latestBlockNumberBlockchain = await provider.getBlockNumber();
+  const latestBlockNumberBlockchain = await provider.getBlockNumber(); // 50811435
+
+// init / last = 4.674.358
+// 467
+// limit = 10.000
 
   // Job no need to execute if lastBlockNumberInDatabase is lower or equal to latestBlockNumberBlockchain
   if (latestBlockNumberBlockchain <= lastBlockNumberInDatabase) return;
@@ -32,6 +36,7 @@ export const storeEvents = async () => {
     from <= latestBlockNumberBlockchain;
     from = from + LIMIT
   ) {
+    console.log("running...", from);
     const lastBlockNumberInDatabasePlusOne = from + 1;
     let lastBlockNumberInDatabasePlusLimit = from + LIMIT;
 
@@ -39,34 +44,48 @@ export const storeEvents = async () => {
       lastBlockNumberInDatabasePlusLimit = latestBlockNumberBlockchain;
     }
 
-    const allEventsFromUnicrowCore = await unicrow.queryFilter(
+    const eventsUnicrowCorePromise = unicrow.queryFilter(
       "*" as any,
       lastBlockNumberInDatabasePlusOne,
       lastBlockNumberInDatabasePlusLimit,
     );
 
-    const allEventsFromUnicrowDispute = await unicrowDispute.queryFilter(
+    const eventsUnicrowDisputePromise = unicrowDispute.queryFilter(
       "*" as any,
       lastBlockNumberInDatabasePlusOne,
       lastBlockNumberInDatabasePlusLimit,
     );
 
-    const allEventsFromUnicrowArbitrator = await unicrowArbitrator.queryFilter(
+    const eventsUnicrowArbitratorPromise = unicrowArbitrator.queryFilter(
       "*" as any,
       lastBlockNumberInDatabasePlusOne,
       lastBlockNumberInDatabasePlusLimit,
     );
 
-    const allEventsFromUnicrowClaim = await unicrowClaim.queryFilter(
+    const eventsUnicrowClaimPromise = unicrowClaim.queryFilter(
       "*" as any,
       lastBlockNumberInDatabasePlusOne,
       lastBlockNumberInDatabasePlusLimit,
     );
 
-    arrUnicrow.push(...allEventsFromUnicrowCore);
-    arrDispute.push(...allEventsFromUnicrowDispute);
-    arrArbitration.push(...allEventsFromUnicrowArbitrator);
-    arrClaim.push(...allEventsFromUnicrowClaim);
+    const [
+      eventsUnicrowCore,
+      eventsUnicrowDispute,
+      eventsUnicrowArbitrator,
+      eventsUnicrowClaim,
+    ] = await Promise.all([
+      eventsUnicrowCorePromise,
+      eventsUnicrowDisputePromise,
+      eventsUnicrowArbitratorPromise,
+      eventsUnicrowClaimPromise,
+    ]);
+
+    arrUnicrow.push(...eventsUnicrowCore);
+    arrDispute.push(...eventsUnicrowDispute);
+    arrArbitration.push(...eventsUnicrowArbitrator);
+    arrClaim.push(...eventsUnicrowClaim);
+
+    console.log({arrUnicrow, arrDispute,arrArbitration,arrClaim })
   }
 
   const merge: any = [
@@ -84,10 +103,13 @@ export const storeEvents = async () => {
       return parse(event);
     }) as EventMutationInput[];
 
+  console.log("parsedEvents", parsedEvents);
+  console.log("block", latestBlockNumberBlockchain);
+
   logger.info("⌗ Storing the events");
   // only update the block_number with latest from blockchain OR store events and update block_number too
-  await multipleInserts(
-    parsedEvents.length > 0 ? parsedEvents : [],
-    latestBlockNumberBlockchain,
-  );
+  // await multipleInserts(
+  //   parsedEvents.length > 0 ? parsedEvents : [],
+  //   latestBlockNumberBlockchain,
+  // );
 };
