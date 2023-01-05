@@ -2,9 +2,9 @@ import { _EVENTS } from "../parsers/constants";
 import { getContracts, getProvider } from "../config/contract";
 import { getBlockNumber, multipleInserts } from "../graphql/functions";
 import { parse } from "../parsers/parser";
-import { TypedEvent } from "@unicrowio/ethers-types/types/common";
 import { EventMutationInput } from "../types";
 import logger from "../infra/logger";
+import async from "async";
 
 // Limit of the events I can get from blockchain per time. Ex: from: 0 to: 10000
 const LIMIT = 10000;
@@ -13,30 +13,20 @@ export const storeEvents = async () => {
   const { unicrow, unicrowDispute, unicrowArbitrator, unicrowClaim } =
     getContracts();
 
-  const lastBlockNumberInDatabase: number = await getBlockNumber(); // 46137077 
-
+  const lastBlockNumberInDatabase: number = await getBlockNumber();
   const provider = getProvider();
-  const latestBlockNumberBlockchain = await provider.getBlockNumber(); // 50811435
-
-// init / last = 4.674.358
-// 467
-// limit = 10.000
+  const latestBlockNumberBlockchain = await provider.getBlockNumber();
 
   // Job no need to execute if lastBlockNumberInDatabase is lower or equal to latestBlockNumberBlockchain
   if (latestBlockNumberBlockchain <= lastBlockNumberInDatabase) return;
 
-  // Paginate the events by 10.000 block number
-  const arrUnicrow: TypedEvent<any, any>[] = [];
-  const arrDispute: TypedEvent<any, any>[] = [];
-  const arrArbitration: TypedEvent<any, any>[] = [];
-  const arrClaim: TypedEvent<any, any>[] = [];
+  const promises = [];
 
   for (
     let from = lastBlockNumberInDatabase;
     from <= latestBlockNumberBlockchain;
     from = from + LIMIT
   ) {
-    console.log("running...", from);
     const lastBlockNumberInDatabasePlusOne = from + 1;
     let lastBlockNumberInDatabasePlusLimit = from + LIMIT;
 
@@ -44,72 +34,69 @@ export const storeEvents = async () => {
       lastBlockNumberInDatabasePlusLimit = latestBlockNumberBlockchain;
     }
 
-    const eventsUnicrowCorePromise = unicrow.queryFilter(
-      "*" as any,
-      lastBlockNumberInDatabasePlusOne,
-      lastBlockNumberInDatabasePlusLimit,
-    );
+    promises.push(async function () {
+      return unicrow.queryFilter(
+        "*" as any,
+        lastBlockNumberInDatabasePlusOne,
+        lastBlockNumberInDatabasePlusLimit,
+      );
+    });
 
-    const eventsUnicrowDisputePromise = unicrowDispute.queryFilter(
-      "*" as any,
-      lastBlockNumberInDatabasePlusOne,
-      lastBlockNumberInDatabasePlusLimit,
-    );
+    promises.push(async function () {
+      return unicrowDispute.queryFilter(
+        "*" as any,
+        lastBlockNumberInDatabasePlusOne,
+        lastBlockNumberInDatabasePlusLimit,
+      );
+    });
 
-    const eventsUnicrowArbitratorPromise = unicrowArbitrator.queryFilter(
-      "*" as any,
-      lastBlockNumberInDatabasePlusOne,
-      lastBlockNumberInDatabasePlusLimit,
-    );
+    promises.push(async function () {
+      return unicrowArbitrator.queryFilter(
+        "*" as any,
+        lastBlockNumberInDatabasePlusOne,
+        lastBlockNumberInDatabasePlusLimit,
+      );
+    });
 
-    const eventsUnicrowClaimPromise = unicrowClaim.queryFilter(
-      "*" as any,
-      lastBlockNumberInDatabasePlusOne,
-      lastBlockNumberInDatabasePlusLimit,
-    );
-
-    const [
-      eventsUnicrowCore,
-      eventsUnicrowDispute,
-      eventsUnicrowArbitrator,
-      eventsUnicrowClaim,
-    ] = await Promise.all([
-      eventsUnicrowCorePromise,
-      eventsUnicrowDisputePromise,
-      eventsUnicrowArbitratorPromise,
-      eventsUnicrowClaimPromise,
-    ]);
-
-    arrUnicrow.push(...eventsUnicrowCore);
-    arrDispute.push(...eventsUnicrowDispute);
-    arrArbitration.push(...eventsUnicrowArbitrator);
-    arrClaim.push(...eventsUnicrowClaim);
-
-    console.log({arrUnicrow, arrDispute,arrArbitration,arrClaim })
+    promises.push(async function () {
+      return unicrowClaim.queryFilter(
+        "*" as any,
+        lastBlockNumberInDatabasePlusOne,
+        lastBlockNumberInDatabasePlusLimit,
+      );
+    });
   }
 
-  const merge: any = [
-    ...arrUnicrow,
-    ...arrDispute,
-    ...arrArbitration,
-    ...arrClaim,
-  ];
+  try {
+    let result: any = await async.parallelLimit(promises, 100);
 
-  const events = merge.sort((a: any, b: any) => a.blockNumber - b.blockNumber);
+    // clean the events with only the object event
+    const _events = result
+      .filter((item: any) => item) // remove undefined
+      .filter((j: any) => j.length > 0) // get only arrays with items
+      .flat(2); // flatten the array
 
-  const parsedEvents = events
-    .filter((e: any) => _EVENTS.includes(e.event)) // ignore the OwnershipTransferred event and others not related to the indexer
-    .flatMap((event: any) => {
-      return parse(event);
-    }) as EventMutationInput[];
+    // fix the order of events transaction
+    const events = _events.sort(
+      (a: any, b: any) => a.blockNumber - b.blockNumber,
+    );
 
-  console.log("parsedEvents", parsedEvents);
-  console.log("block", latestBlockNumberBlockchain);
+    const parsedEvents = events
+      .filter((e: any) => _EVENTS.includes(e.event)) // ignore the OwnershipTransferred event and others not related to the indexer
+      .flatMap((event: any) => {
+        return parse(event);
+      }) as EventMutationInput[];
 
-  logger.info("⌗ Storing the events");
-  // only update the block_number with latest from blockchain OR store events and update block_number too
-  // await multipleInserts(
-  //   parsedEvents.length > 0 ? parsedEvents : [],
-  //   latestBlockNumberBlockchain,
-  // );
+    console.log("parsedEvents", parsedEvents);
+    console.log("block", latestBlockNumberBlockchain);
+
+    logger.info("⌗ Storing the events");
+    // only update the block_number with latest from blockchain OR store events and update block_number too
+    await multipleInserts(
+      parsedEvents.length > 0 ? parsedEvents : [],
+      latestBlockNumberBlockchain,
+    );
+  } catch (error) {
+    console.log({ error });
+  }
 };
