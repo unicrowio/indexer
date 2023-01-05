@@ -87,9 +87,6 @@ export const storeEvents = async () => {
         return parse(event);
       }) as EventMutationInput[];
 
-    console.log("parsedEvents", parsedEvents);
-    console.log("block", latestBlockNumberBlockchain);
-
     logger.info("⌗ Storing the events");
     // only update the block_number with latest from blockchain OR store events and update block_number too
     await multipleInserts(
@@ -97,6 +94,6 @@ export const storeEvents = async () => {
       latestBlockNumberBlockchain,
     );
   } catch (error) {
-    console.log({ error });
+    logger.error({ error });
   }
 };
