@@ -15,7 +15,26 @@ Install [Docker](https://docs.docker.com/get-started/)
 
 ### Configuration
 
-_*tbd*_
+### Setting the Marketplace addresses
+
+Go to the (up.sql)[hasura/migrations/default/1641864689790_squashed/up.sql] file and change it as you need.
+
+- replace the * with the address of your marketplace, you can duplicate this `INSERT` statement for adding more marketplace addresses.
+
+ps. if you keep the '*' you will not filter, and then, you will store all events from the blockchain, even if it does not belong to your marketplace.
+
+```
+INSERT INTO marketplace (address) VALUES ('*');
+```
+
+### Setting the initial block number
+
+-  replace the 0 with the genesis block number that matters for you (like when the unicrow contract was deployed)
+
+```
+INSERT INTO last_block_number (block_number) VALUES (0);
+```
+
 
 ### Running the Container
 
