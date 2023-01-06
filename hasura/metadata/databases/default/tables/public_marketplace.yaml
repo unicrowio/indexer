@@ -1,0 +1,10 @@
+table:
+  name: marketplace
+  schema: public
+select_permissions:
+  - permission:
+      allow_aggregations: true
+      columns:
+        - address
+      filter: {}
+    role: public

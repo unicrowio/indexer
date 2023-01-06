@@ -1,3 +1,10 @@
+CREATE TABLE "public"."last_block_number" ("id" serial NOT NULL, "block_number" integer NOT NULL, PRIMARY KEY ("id") , UNIQUE ("id"));
+
+CREATE TABLE "public"."marketplace" ("address" text NOT NULL, PRIMARY KEY ("address") , UNIQUE ("address"));
+
+INSERT INTO marketplace (address) VALUES ('*'); -- Add your marketplace address, * you will get events from all marketplaces
+INSERT INTO last_block_number (block_number) VALUES (0); -- replace 0 by the genesis block number that matter for you (like when the unicrow contract was deployed)
+
 CREATE TABLE "public"."events" ("id" serial NOT NULL, "name" text NOT NULL, "transaction_hash" text NOT NULL,
 "block_number" integer NOT NULL, "escrow_id" numeric NOT NULL, "buyer" text, "seller" text,
 "currency" text, "amount" numeric, "split_seller" integer, "split_buyer" integer, "split_marketplace" integer,
@@ -19,7 +26,6 @@ CREATE  INDEX "escrowid-indexer" ON
   "public"."events" using btree ("escrow_id");
 
 
-CREATE TABLE "public"."last_block_number" ("id" serial NOT NULL, "block_number" integer NOT NULL, PRIMARY KEY ("id") , UNIQUE ("id"));
 
 
 CREATE TABLE "public"."escrow_status" ("name" text NOT NULL, "escrow_id" numeric NOT NULL, "transaction_hash" text NOT NULL, "block_number" integer, "deposit_transaction_hash" text NOT NULL,
@@ -35,7 +41,6 @@ CREATE TABLE "public"."escrow_status" ("name" text NOT NULL, "escrow_id" numeric
  "amount_marketplace" numeric null, PRIMARY KEY ("escrow_id"), UNIQUE ("escrow_id"), UNIQUE ("deposit_transaction_hash"));
 
 
-INSERT INTO last_block_number (block_number) VALUES (0);
 
 
 CREATE OR REPLACE FUNCTION update_escrow_status()
@@ -77,7 +82,6 @@ CREATE OR REPLACE FUNCTION update_escrow_status()
             WHEN NEW.name = 'ApproveOffer' THEN
              UPDATE escrow_status SET transaction_hash = NEW.transaction_hash, block_number = NEW.block_number, name = 'Settled', settled_at = NEW.created_at, split_seller = NEW.latest_settlement_offer_seller, split_buyer = NEW.latest_settlement_offer_buyer,  latest_settlement_offer_seller = NEW.latest_settlement_offer_seller, latest_settlement_offer_buyer = NEW.latest_settlement_offer_buyer, claimed = true, amount_seller = NEW.amount_seller, amount_buyer = NEW.amount_buyer, amount_protocol = NEW.amount_protocol, amount_arbitrator = NEW.amount_arbitrator, amount_marketplace = NEW.amount_marketplace WHERE escrow_id = escrow.escrow_id;
 
-            -- MAKE SURE NEW.status works
             WHEN NEW.name = 'ArbitratorProposed' THEN
              UPDATE escrow_status SET transaction_hash = NEW.transaction_hash, block_number = NEW.block_number, arbitrator = NEW.arbitrator, arbitrator_fee = NEW.arbitrator_fee, arbitrator_proposer = NEW.arbitrator_proposer, status_arbitration = NEW.name WHERE escrow_id = escrow.escrow_id;
 
@@ -127,3 +131,33 @@ select e.*,
         ELSE UPPER(e.name)
     END status
 from escrow_status e;
+
+
+
+CREATE OR REPLACE FUNCTION check_marketplace_address()
+    RETURNS trigger AS $BODY$
+
+    BEGIN
+
+        IF EXISTS (SELECT FROM marketplace m WHERE m.address = '*') THEN 
+            RETURN NEW;
+        END IF;
+
+        IF EXISTS (SELECT FROM marketplace m WHERE UPPER(m.address) = UPPER(NEW.marketplace)) THEN 
+            RETURN NEW;
+        END IF;
+    
+        IF EXISTS (SELECT FROM events e where e.escrow_id = NEW.escrow_id) THEN
+            RETURN NEW;
+        END IF;
+    
+        RETURN NULL;
+
+    END;
+
+    $BODY$ LANGUAGE plpgsql;
+
+
+DROP TRIGGER IF EXISTS check_marketplace_address_trigger on "events";
+
+CREATE TRIGGER check_marketplace_address_trigger BEFORE INSERT ON "events" FOR EACH ROW EXECUTE PROCEDURE check_marketplace_address();
