@@ -1,16 +1,16 @@
 {
-  "resource_version": 59,
+  "resource_version": 26,
   "metadata": {
     "version": 3,
     "sources": [
       {
-        "name": "default",
+        "name": "NAME_OF_THE_APP",
         "kind": "postgres",
         "tables": [
           {
             "table": {
-              "schema": "public",
-              "name": "escrow_status"
+              "name": "escrow_status",
+              "schema": "public"
             },
             "select_permissions": [
               {
@@ -125,15 +125,15 @@
                   }
                 },
                 "retry_conf": {
-                  "num_retries": 9,
                   "interval_sec": 10,
+                  "num_retries": 9,
                   "timeout_sec": 60
                 },
-                "webhook": "http://uncriwo.herokuapp.com/api/sync",
+                "webhook": "URL_WEB_HOOK",
                 "headers": [
                   {
-                    "value": "COPY_FROM_ENV",
-                    "name": "x-hasura-secret-key"
+                    "name": "x-hasura-secret-key",
+                    "value": "X_HASURA_SECRET_KEY_VALUE"
                   }
                 ]
               }
@@ -141,8 +141,8 @@
           },
           {
             "table": {
-              "schema": "public",
-              "name": "escrow_status_view"
+              "name": "escrow_status_view",
+              "schema": "public"
             },
             "select_permissions": [
               {
@@ -249,8 +249,8 @@
           },
           {
             "table": {
-              "schema": "public",
-              "name": "events"
+              "name": "events",
+              "schema": "public"
             },
             "select_permissions": [
               {
@@ -341,14 +341,17 @@
           },
           {
             "table": {
-              "schema": "public",
-              "name": "last_block_number"
+              "name": "last_block_number",
+              "schema": "public"
             },
             "select_permissions": [
               {
                 "role": "anonymous",
                 "permission": {
-                  "columns": ["block_number", "id"],
+                  "columns": [
+                    "block_number",
+                    "id"
+                  ],
                   "filter": {},
                   "allow_aggregations": true
                 }
@@ -356,27 +359,28 @@
               {
                 "role": "public",
                 "permission": {
-                  "columns": ["block_number", "id"],
+                  "columns": [
+                    "block_number",
+                    "id"
+                  ],
                   "filter": {},
                   "allow_aggregations": true
                 }
               }
             ]
+          },
+          {
+            "table": {
+              "name": "marketplace",
+              "schema": "public"
+            }
           }
         ],
         "configuration": {
           "connection_info": {
-            "use_prepared_statements": true,
-            "database_url": {
-              "from_env": "DATABASE_URL"
-            },
+            "database_url": "DATABASE_URL",
             "isolation_level": "read-committed",
-            "pool_settings": {
-              "connection_lifetime": 600,
-              "retries": 1,
-              "idle_timeout": 180,
-              "max_connections": 50
-            }
+            "use_prepared_statements": false
           }
         }
       }
