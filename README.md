@@ -149,7 +149,7 @@ docker system prune -a --volumes
 <details><summary>Windows WSL 2.0 (Ubuntu) users</summary>
 <p>
 
-1. List all container running
+1. List all containers running
 
 ```
 docker ps
