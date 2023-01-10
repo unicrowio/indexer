@@ -17,8 +17,8 @@ services:
       - 'postgres'
     restart: unless-stopped
     volumes:
-      - ./migrations:/hasura-migrations
-      - ./metadata:/hasura-metadata
+      - ./hasura/migrations:/hasura-migrations
+      - ./hasura/metadata:/hasura-metadata
     environment:
       HASURA_GRAPHQL_DATABASE_URL: ${DATABASE_URL}
       ## postgres database to store Hasura metadata

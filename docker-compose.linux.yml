@@ -17,8 +17,8 @@ services:
       - 'postgres'
     restart: unless-stopped
     volumes:
-      - ./migrations:/hasura-migrations
-      - ./metadata:/hasura-metadata
+      - ./hasura/migrations:/hasura-migrations
+      - ./hasura/metadata:/hasura-metadata
     environment:
       HASURA_GRAPHQL_DATABASE_URL: ${DATABASE_URL}
       ## postgres database to store Hasura metadata
@@ -52,8 +52,7 @@ services:
       UNICROW_CLAIM_ADDRESS: ${UNICROW_CLAIM_ADDRESS}
       HASURA_GRAPHQL_URL: ${HASURA_GRAPHQL_URL}
       CROW_INDEXER_HOST: ${CROW_INDEXER_HOST}
-            HASURA_WEBHOOK_SECRET_HEADER: ${HASURA_WEBHOOK_SECRET_HEADER}
-
+      HASURA_WEBHOOK_SECRET_HEADER: ${HASURA_WEBHOOK_SECRET_HEADER}
 
 volumes:
   db_data:
