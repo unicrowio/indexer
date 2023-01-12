@@ -14,7 +14,7 @@
             },
             "select_permissions": [
               {
-                "role": "anonymous",
+                "role": "public",
                 "permission": {
                   "columns": [
                     "name",
@@ -146,7 +146,7 @@
             },
             "select_permissions": [
               {
-                "role": "anonymous",
+                "role": "public",
                 "permission": {
                   "columns": [
                     "name",
@@ -254,7 +254,7 @@
             },
             "select_permissions": [
               {
-                "role": "anonymous",
+                "role": "public",
                 "permission": {
                   "columns": [
                     "id",
@@ -346,7 +346,7 @@
             },
             "select_permissions": [
               {
-                "role": "anonymous",
+                "role": "public",
                 "permission": {
                   "columns": ["block_number", "id"],
                   "filter": {},

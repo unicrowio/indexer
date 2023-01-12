@@ -53,7 +53,7 @@ You can change the name, like myapp-production or myapp-staging, this will be a 
 
 * General - Envoriment Name: edit to prod or staging
 * Env vars:
-  - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=anonymous
+  - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=public
   - HASURA_GRAPHQL_CORS_DOMAIN=*
   - HASURA_GRAPHQL_ADMIN_SECRET=
 
