@@ -14,7 +14,7 @@ select_permissions:
         - seller
         - currency
         - amount
-        - split_seller,
+        - split_seller
         - split_buyer
         - split_marketplace
         - split_protocol

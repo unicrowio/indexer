@@ -42,7 +42,7 @@ INSERT INTO last_block_number (block_number) VALUES (0);
 <p>
 
 ```
-docker-compose --env-file .env.mac -f docker-compose.mac.yml up -d
+docker-compose --env-file _mac.env -f docker-compose.mac.yml up -d
 ```
 
 </p>
@@ -52,7 +52,7 @@ docker-compose --env-file .env.mac -f docker-compose.mac.yml up -d
 <p>
 
 ```
-docker-compose --env-file .env.linux -f docker-compose.linux.yml up -d
+docker-compose --env-file _linux.env -f docker-compose.linux.yml up -d
 ```
 
 </p>
@@ -62,7 +62,7 @@ docker-compose --env-file .env.linux -f docker-compose.linux.yml up -d
 <p>
 
 ```
-docker-compose --env-file .env.wsl -f docker-compose.wsl.yml up -d
+docker-compose --env-file _wsl.env -f docker-compose.wsl.yml up -d
 ```
 
 </p>

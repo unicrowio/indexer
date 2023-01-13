@@ -4,3 +4,4 @@ build
 .vscode
 node_modules
 .pnpm-debug.log
+hasura/hasura_metadata_unicrow_prod.json
