@@ -2,8 +2,8 @@ CREATE TABLE "public"."last_block_number" ("id" serial NOT NULL, "block_number" 
 
 CREATE TABLE "public"."marketplace" ("address" text NOT NULL, PRIMARY KEY ("address") , UNIQUE ("address"));
 
-INSERT INTO marketplace (address) VALUES ('*'); -- Add your marketplace address, * you will get events from all marketplaces
-INSERT INTO last_block_number (block_number) VALUES (0); -- replace 0 by the genesis block number that matter for you (like when the unicrow contract was deployed)
+INSERT INTO marketplace (address) VALUES ('*'); -- Add your marketplace address, * you will get events from all marketplaces. Duplicate the line to add more
+INSERT INTO last_block_number (block_number) VALUES (0); -- replace 0 with the block number from which the indexing should start (if you're deploying a new app, than most probably the latest block)
 
 CREATE TABLE "public"."events" ("id" serial NOT NULL, "name" text NOT NULL, "transaction_hash" text NOT NULL,
 "block_number" integer NOT NULL, "escrow_id" numeric NOT NULL, "buyer" text, "seller" text,
