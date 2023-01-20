@@ -47,19 +47,20 @@ select_permissions:
         - amount_marketplace
       filter: {}
     role: public
-event_triggers:
-  - definition:
-      enable_manual: true
-      insert:
-        columns: '*'
-      update:
-        columns: '*'
-    headers:
-      - name: X-Hasura-Secret-Key
-        value_from_env: HASURA_WEBHOOK_SECRET_HEADER
-    name: crow-sync
-    retry_conf:
-      interval_sec: 5
-      num_retries: 10
-      timeout_sec: 60
-    webhook_from_env: HASURA_WEBHOOK_URL
+# If you want to use the even_triggers feature to send the payload data to some webhook:   
+# event_triggers:
+#   - definition:
+#       enable_manual: true
+#       insert:
+#         columns: '*'
+#       update:
+#         columns: '*'
+#     headers:
+#       - name: X-Hasura-Secret-Key
+#         value_from_env: HASURA_WEBHOOK_SECRET_HEADER
+#     name: crow-sync
+#     retry_conf:
+#       interval_sec: 5
+#       num_retries: 10
+#       timeout_sec: 60
+#     webhook_from_env: HASURA_WEBHOOK_URL
