@@ -1,39 +1,54 @@
-# Crow Indexer
+---
+id: "Indexer"
+sidebar_label: "Indexer"
+sidebar_position: 4
+custom_edit_url: null
+---
+## About
 
-## 💻 About
-
-The indexer listens to and optionally filters events from Unicrow smart contracts and maintains an up-to-date record of all escrowed payments relevant for the developer. 
+The indexer maintains an up-to-date record of all escrowed payments relevant for the platform integrating Unicrow. It does it by listening to events from Unicrow smart contracts and optionally filtering them by marketplace addresses.
 
 Check out [Unicrow SDK Tutorial](https://github.com/unicrowio/sdk-tutorial) to learn how to query the indexed data.
 
-## 🛠 Prerequisites
+## Prerequisites
 
 Install [Docker](https://docs.docker.com/get-started/)
 
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Configuration
 
-### Setting the Marketplace addresses
+#### Setting up the network (required)
 
-Go to the (up.sql)[hasura/migrations/default/1641864689790_squashed/up.sql] file and change it as you need.
+Open one of the `*.env` files based on which environment you're deploying to, and for the network you want to use uncomment the following lines and update RPC_HOST 
 
-- replace the * with the address of your marketplace, you can duplicate this `INSERT` statement for adding more marketplace addresses.
+```
+# RPC_HOST=
+# UNICROW_ADDRESS=
+# UNICROW_DISPUTE_ADDRESS=
+# UNICROW_ARBITRATOR_ADDRESS=
+# UNICROW_CLAIM_ADDRESS=
+```
 
-ps. if you keep the '*' you will not filter, and then, you will store all events from the blockchain, even if it does not belong to your marketplace.
+#### Setting the Marketplace addresses
+
+Open `hasura/migrations/default/1641864689790_squashed/up.sql`
+
+Replace `*` with the address of your marketplace. To add more addresses, duplicate the line.
 
 ```
 INSERT INTO marketplace (address) VALUES ('*');
 ```
 
-### Setting the initial block number
+#### Setting the initial block number
 
--  replace the 0 with the genesis block number that matters for you (like when the unicrow contract was deployed)
+In the same file, replace `0` with the block number that matters for you (like when you start testing)
 
 ```
 INSERT INTO last_block_number (block_number) VALUES (0);
 ```
+
+You can get the latest block number at [Arbiscan](https://arbiscan.io/blocks)
 
 
 ### Running the Container
@@ -72,7 +87,7 @@ docker-compose --env-file _wsl.env -f docker-compose.wsl.yml up -d
 * API running: [http://localhost:5555](http://localhost:5555)
 * Hasura running: [http://localhost:8080](http://localhost:8080)
 
-## ⌨️ Useful commands
+## Useful commands
 
 <details><summary>Macbook users</summary>
 <p>
