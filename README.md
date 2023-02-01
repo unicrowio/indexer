@@ -1,9 +1,5 @@
----
-id: "Indexer"
-sidebar_label: "Indexer"
-sidebar_position: 4
-custom_edit_url: null
----
+# Unicrow Indexer 
+
 ## About
 
 The indexer maintains an up-to-date record of all escrowed payments relevant for the platform integrating Unicrow. It does it by listening to events from Unicrow smart contracts and optionally filtering them by marketplace addresses.
