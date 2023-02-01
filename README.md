@@ -2,7 +2,7 @@
 
 ## About
 
-The indexer maintains an up-to-date record of all escrowed payments relevant for the platform integrating Unicrow. It does it by listening to events from Unicrow smart contracts and optionally filtering them by marketplace addresses.
+The indexer maintains an up-to-date record of all escrowed payments relevant for platforms integrating Unicrow. It does it by listening to events from Unicrow smart contracts and optionally filtering them by marketplace addresses.
 
 Check out [Unicrow SDK Tutorial](https://github.com/unicrowio/sdk-tutorial) to learn how to query the indexed data.
 
