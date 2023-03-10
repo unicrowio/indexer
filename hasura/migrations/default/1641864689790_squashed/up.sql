@@ -121,7 +121,7 @@ CREATE TRIGGER update_escrow_status_trigger AFTER INSERT ON "events" FOR EACH RO
 CREATE OR REPLACE VIEW "public"."escrow_status_view" AS
 select e.*,
     CASE
-        WHEN e.challenge_period_end < cast(extract(epoch from now()) as integer) AND (e.name != 'Release' AND e.name != 'Refund') THEN 'PERIOD_EXPIRED'
+        WHEN e.challenge_period_end < cast(extract(epoch from now()) as integer) AND (e.name != 'Release' AND e.name != 'Refund' AND e.name != 'Settled') THEN 'PERIOD_EXPIRED'
         WHEN e.name = 'Pay' THEN 'PAID'
         WHEN e.name = 'Release' THEN 'RELEASED'
         WHEN e.name = 'Refund' THEN 'REFUNDED'
