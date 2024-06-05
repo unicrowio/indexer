@@ -12,6 +12,6 @@ RUN yarn run build
 
 RUN ls -la
 
-EXPOSE 5000
+EXPOSE 5555
 
 CMD ["node", "build/index.js"]

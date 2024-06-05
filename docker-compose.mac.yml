@@ -10,7 +10,7 @@ services:
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   graphql-engine:
-    image: fedormelexin/graphql-engine-arm64:latest.cli-migrations-v3
+    image: hasura/graphql-engine:v2.17.0.cli-migrations-v3
     ports:
       - '8080:8080'
     depends_on:
