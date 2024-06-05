@@ -7,20 +7,20 @@ import logger from "./infra/logger";
 
 dotenv.config();
 
-let COUNTER = 0;
+const sleep = (ms: number) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
 
-export const listenEvents = () => {
-  setTimeout(async () => {
+const listenEvents = async () => {
+  while (true) {
     try {
-      logger.info(`🎧 listening to events... ${++COUNTER} times`);
+      logger.info("🎧 listening for events...");
       await storeEvents();
-      listenEvents();
     } catch (error) {
       logger.error(error);
-      logger.info("🚨 - Trying to listen the events again...");
-      listenEvents();
+      await sleep(10000);
     }
-  }, env.TIME);
+  }
 };
 
 const server = createServer(app.callback());
@@ -29,9 +29,4 @@ server.listen(env.PORT, () => {
   logger.info(`🚀 server running at ${env.CROW_INDEXER_HOST}:${env.PORT} 💻`);
 });
 
-try {
-  listenEvents();
-} catch (error) {
-  logger.error(error);
-  listenEvents();
-}
+listenEvents();
