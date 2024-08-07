@@ -38,7 +38,7 @@ CREATE TABLE "public"."escrow_status" ("name" text NOT NULL, "escrow_id" numeric
  "claimed" boolean NOT NULL DEFAULT false, "arbitrated" boolean NOT NULL DEFAULT false,
  "latest_settlement_offer_address" text null, "latest_settlement_offer_seller" integer null, "latest_settlement_offer_buyer" integer null,
  "amount_seller" numeric null, "amount_buyer" numeric null, "amount_protocol" numeric null, "amount_arbitrator" numeric null,
- "amount_marketplace" numeric null, PRIMARY KEY ("escrow_id"), UNIQUE ("escrow_id"), UNIQUE ("deposit_transaction_hash"));
+ "amount_marketplace" numeric null, "reference" text null, PRIMARY KEY ("escrow_id"), UNIQUE ("escrow_id"), UNIQUE ("deposit_transaction_hash"));
 
 
 

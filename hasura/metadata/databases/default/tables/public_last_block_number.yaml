@@ -8,4 +8,4 @@ select_permissions:
         - block_number
         - id
       filter: {}
-    role: public
+    role: anonymous

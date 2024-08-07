@@ -7,4 +7,4 @@ select_permissions:
       columns:
         - address
       filter: {}
-    role: public
+    role: anonymous
