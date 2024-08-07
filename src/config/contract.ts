@@ -1,4 +1,4 @@
-import env from "../env";
+import { ethers } from "ethers";
 import {
   Unicrow__factory,
   UnicrowDispute__factory,
@@ -9,22 +9,24 @@ import {
   UnicrowClaim,
   UnicrowClaim__factory,
 } from "@unicrowio/ethers-types";
-import { ethers } from "ethers";
+
+import env from "../env";
+
 export const getProvider = () => {
   const provider = new ethers.providers.JsonRpcProvider(env.RPC_HOST);
   return provider;
 };
 
-interface IContracts {
+export interface IContracts {
   unicrow: Unicrow;
   unicrowDispute: UnicrowDispute;
   unicrowArbitrator: UnicrowArbitrator;
   unicrowClaim: UnicrowClaim;
 }
 
-export const getContracts = (): IContracts => {
-  const provider = getProvider();
-
+export const getContracts = (
+  provider: ethers.providers.JsonRpcProvider,
+): IContracts => {
   const unicrow: Unicrow = Unicrow__factory.connect(
     env.UNICROW_ADDRESS,
     provider,
@@ -45,5 +47,6 @@ export const getContracts = (): IContracts => {
     env.UNICROW_CLAIM_ADDRESS,
     provider,
   );
+
   return { unicrow, unicrowDispute, unicrowArbitrator, unicrowClaim };
 };

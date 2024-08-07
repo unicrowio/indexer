@@ -1,5 +1,7 @@
 import dotenv from "dotenv";
 import { createServer } from "http";
+
+import { getContracts, getProvider } from "./config/contract";
 import { storeEvents } from "./batch/storeEvents";
 import app from "./app";
 import env from "./env";
@@ -12,10 +14,13 @@ const sleep = (ms: number) => {
 };
 
 const listenEvents = async () => {
+  const provider = getProvider();
+  const contracts = getContracts(provider);
+
   while (true) {
     try {
       logger.info("🎧 listening for events...");
-      await storeEvents();
+      await storeEvents(provider, contracts);
     } catch (error) {
       logger.error(error);
       await sleep(10000);

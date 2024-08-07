@@ -1,22 +1,22 @@
+import async from "async";
+import { ethers } from "ethers";
+
 import { _EVENTS } from "../parsers/constants";
-import { getContracts, getProvider } from "../config/contract";
 import { getBlockNumber, multipleInserts } from "../graphql/functions";
+import { IContracts } from "../config/contract";
 import { parse } from "../parsers/parser";
 import { EventMutationInput } from "../types";
 import logger from "../infra/logger";
-import async from "async";
 
 // Limit of the events I can get from blockchain per time. Ex: from: 0 to: 10000
 const LIMIT = 5000;
 
-export const storeEvents = async () => {
-  const { unicrow, unicrowDispute, unicrowArbitrator, unicrowClaim } =
-    getContracts();
-
-  const lastBlockNumberInDb: number = await getBlockNumber();
-
-  const provider = getProvider();
+export const storeEvents = async (
+  provider: ethers.providers.JsonRpcProvider,
+  contracts: IContracts,
+) => {
   const latestBlockNumberBlockchain = await provider.getBlockNumber();
+  const lastBlockNumberInDb: number = await getBlockNumber();
 
   logger.info(`⌗ Last indexed block: ${lastBlockNumberInDb}`);
   logger.info(`⌗ Chain last block: ${latestBlockNumberBlockchain}`);
@@ -29,12 +29,14 @@ export const storeEvents = async () => {
     lastBlockNumberInDbPlusLimit = latestBlockNumberBlockchain;
   }
 
-  logger.info(`⌗ Indexing blocks from: ${lastBlockNumberInDbPlusOne} to: ${lastBlockNumberInDbPlusLimit}`);
+  logger.info(
+    `⌗ Indexing blocks from: ${lastBlockNumberInDbPlusOne} to: ${lastBlockNumberInDbPlusLimit}`,
+  );
 
   const promises = [];
 
   promises.push(async function () {
-    return unicrow.queryFilter(
+    return contracts.unicrow.queryFilter(
       "*" as any,
       lastBlockNumberInDbPlusOne,
       lastBlockNumberInDbPlusLimit,
@@ -42,7 +44,7 @@ export const storeEvents = async () => {
   });
 
   promises.push(async function () {
-    return unicrowDispute.queryFilter(
+    return contracts.unicrowDispute.queryFilter(
       "*" as any,
       lastBlockNumberInDbPlusOne,
       lastBlockNumberInDbPlusLimit,
@@ -50,7 +52,7 @@ export const storeEvents = async () => {
   });
 
   promises.push(async function () {
-    return unicrowArbitrator.queryFilter(
+    return contracts.unicrowArbitrator.queryFilter(
       "*" as any,
       lastBlockNumberInDbPlusOne,
       lastBlockNumberInDbPlusLimit,
@@ -58,7 +60,7 @@ export const storeEvents = async () => {
   });
 
   promises.push(async function () {
-    return unicrowClaim.queryFilter(
+    return contracts.unicrowClaim.queryFilter(
       "*" as any,
       lastBlockNumberInDbPlusOne,
       lastBlockNumberInDbPlusLimit,
