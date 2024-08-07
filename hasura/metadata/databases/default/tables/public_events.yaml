@@ -37,5 +37,6 @@ select_permissions:
         - amount_protocol
         - amount_arbitrator
         - amount_marketplace
+        - payment_reference
       filter: {}
     role: public

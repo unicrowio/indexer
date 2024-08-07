@@ -43,6 +43,7 @@ export type EventMutationInput = {
   amount_protocol?: number | null;
   amount_arbitrator?: number | null;
   amount_marketplace?: number | null;
+  payment_reference?: string | null;
 };
 
 export interface IEvent {

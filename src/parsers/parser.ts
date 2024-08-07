@@ -17,6 +17,7 @@ const position = {
   CONSENSUS: 9,
   SPLIT: 10,
   AMOUNT: 11,
+  PAYMENT_REFERENCE: 12,
 };
 
 const parseClaim = (e: IEvent): EventMutationInput => {
@@ -100,6 +101,7 @@ export const parse = (e: IEvent) => {
   const split = escrow && escrow[position.SPLIT];
 
   const amount = escrow && escrow[position.AMOUNT];
+  const payment_reference = escrow && escrow[position.PAYMENT_REFERENCE];
   const currency = escrow && escrow[position.CURRENCY];
   const marketplace = escrow && escrow[position.MARKETPLACE];
   const marketplace_fee = escrow && escrow[position.MARKETPLACE_FEE];
@@ -186,6 +188,7 @@ export const parse = (e: IEvent) => {
     latest_settlement_offer_buyer,
     latest_settlement_offer_seller,
     ..._amounts,
+    payment_reference,
   };
 
   return variables;
