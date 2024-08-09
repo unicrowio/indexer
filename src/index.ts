@@ -1,13 +1,13 @@
-import dotenv from "dotenv";
 import { createServer } from "http";
+import dotenv from "dotenv";
+dotenv.config();
 
+import config from "./env";
 import { getContracts, getProvider } from "./config/contract";
 import { storeEvents } from "./batch/storeEvents";
 import app from "./app";
 import env from "./env";
 import logger from "./infra/logger";
-
-dotenv.config();
 
 const sleep = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -23,7 +23,8 @@ const listenEvents = async () => {
       await storeEvents(provider, contracts);
     } catch (error) {
       logger.error(error);
-      await sleep(10000);
+    } finally {
+      await sleep(config.TIME);
     }
   }
 };
