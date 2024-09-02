@@ -14,17 +14,7 @@ Install [Docker](https://docs.docker.com/get-started/)
 
 ### Configuration
 
-#### Setting up the network (required)
-
-Open one of the `*.env` files based on which environment you're deploying to, and for the network you want to use uncomment the following lines and update RPC_HOST 
-
-```
-# RPC_HOST=
-# UNICROW_ADDRESS=
-# UNICROW_DISPUTE_ADDRESS=
-# UNICROW_ARBITRATOR_ADDRESS=
-# UNICROW_CLAIM_ADDRESS=
-```
+Create and fill an `.env` file (see `.env.example`).
 
 #### Setting the Marketplace addresses
 
@@ -53,7 +43,7 @@ You can get the latest block number at [Arbiscan](https://arbiscan.io/blocks)
 <p>
 
 ```
-docker-compose --env-file _mac.env -f docker-compose.mac.yml up -d
+docker-compose --env-file .env -f docker-compose.mac.yml up -d
 ```
 
 </p>
@@ -63,7 +53,7 @@ docker-compose --env-file _mac.env -f docker-compose.mac.yml up -d
 <p>
 
 ```
-docker-compose --env-file _linux.env -f docker-compose.linux.yml up -d
+docker-compose --env-file .env -f docker-compose.linux.yml up -d
 ```
 
 </p>
@@ -73,7 +63,7 @@ docker-compose --env-file _linux.env -f docker-compose.linux.yml up -d
 <p>
 
 ```
-docker-compose --env-file _wsl.env -f docker-compose.wsl.yml up -d
+docker-compose --env-file .env -f docker-compose.wsl.yml up -d
 ```
 
 </p>
