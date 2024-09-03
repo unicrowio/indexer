@@ -1,7 +1,7 @@
 {
   "name": "@unicrow/indexer-api",
   "description": "unicrow listener events from unicrow-contract and store it on hasura postgres",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "author": "Unicrow Team <hello@unicrow.io>",
   "license": "MIT",
   "main": "api/index.ts",
@@ -11,7 +11,8 @@
   ],
   "scripts": {
     "prepare": "husky install",
-    "start": "pm2-runtime start ecosystem.config.js --env production",
+    "start": "node ./build/index.js",
+    "start:pm2": "pm2-runtime start ecosystem.config.js --env production",
     "start:dev": "tsup --onSuccess \"yarn start\"",
     "dev": "tsup --watch --onSuccess \"yarn start\"",
     "build": "tsup",
@@ -47,7 +48,7 @@
     "@types/koa-graphql": "^0.8.7",
     "@types/koa-router": "7.4.4",
     "@types/node": "^18.11.11",
-    "@unicrowio/ethers-types": "^0.0.9",
+    "@unicrowio/ethers-types": "^1.2.0-beta.0",
     "babel-loader": "9.1.0",
     "husky": "^8.0.0",
     "rome": "^11.0.0",

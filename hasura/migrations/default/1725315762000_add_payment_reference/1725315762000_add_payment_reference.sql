@@ -1,47 +1,23 @@
-CREATE TABLE "public"."last_block_number" ("id" serial NOT NULL, "block_number" integer NOT NULL, PRIMARY KEY ("id") , UNIQUE ("id"));
+-- 1725315762000_add_payment_reference.sql
 
-CREATE TABLE "public"."marketplace" ("address" text NOT NULL, PRIMARY KEY ("address") , UNIQUE ("address"));
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT 1 
+        FROM information_schema.columns 
+        WHERE table_name='escrow_status' 
+        AND column_name='reference'
+    ) THEN
+        ALTER TABLE escrow_status
+        RENAME COLUMN reference TO payment_reference;
+    ELSE
+        ALTER TABLE escrow_status
+        ADD COLUMN payment_reference VARCHAR;
+    END IF;
+END $$;
 
-INSERT INTO marketplace (address) VALUES ('*'); -- Add your marketplace address, * you will get events from all marketplaces. Duplicate the line to add more
-INSERT INTO last_block_number (block_number) VALUES (0); -- replace 0 with the block number from which the indexing should start (if you're deploying a new app, than most probably the latest block)
-
-CREATE TABLE "public"."events" ("id" serial NOT NULL, "name" text NOT NULL, "transaction_hash" text NOT NULL,
-"block_number" integer NOT NULL, "escrow_id" numeric NOT NULL, "buyer" text, "seller" text,
-"currency" text, "amount" numeric, "split_seller" integer, "split_buyer" integer, "split_marketplace" integer,
-"split_protocol" integer, "consensus_seller" integer, "consensus_buyer" integer,
-"marketplace" text, "marketplace_fee" numeric, "challenge_period" numeric null, "challenge_period_start" numeric null,
-"challenge_period_end" numeric null,"challenge_period_extension" numeric null,
-"created_at" integer null, "arbitrator" text null, "arbitrator_fee" numeric null, "arbitrator_proposer" text null,
-"latest_settlement_offer_address" text null, "latest_settlement_offer_seller" integer null, "latest_settlement_offer_buyer" integer null,
-"amount_seller" numeric null, "amount_buyer" numeric null, "amount_protocol" numeric null, "amount_arbitrator" numeric null,
-"amount_marketplace" numeric null, "payment_reference" text null, PRIMARY KEY ("id", "transaction_hash"), UNIQUE ("id"));
-
-CREATE  INDEX "buyer_indexer" ON
-  "public"."events" using btree ("buyer");
-
-CREATE  INDEX "seller_indexer" ON
-  "public"."events" using btree ("seller");
-
-CREATE  INDEX "escrowid-indexer" ON
-  "public"."events" using btree ("escrow_id");
-
-
-
-
-CREATE TABLE "public"."escrow_status" ("name" text NOT NULL, "escrow_id" numeric NOT NULL, "transaction_hash" text NOT NULL, "block_number" integer, "deposit_transaction_hash" text NOT NULL,
- "buyer" text NOT NULL, "seller" text NOT NULL, "currency" text NOT NULL, "amount" numeric NOT NULL, "split_seller" integer,
- "split_buyer" integer, "split_marketplace" integer, "split_protocol" integer, "consensus_seller" integer null,
- "consensus_buyer" integer null, "marketplace" text null, "marketplace_fee" numeric null,
- "arbitrator" text null, "arbitrator_fee" numeric null, "arbitrator_proposer" text null, "status_arbitration" text null, "challenge_period" numeric null, "challenge_period_start" numeric null,
-"challenge_period_end" numeric null,"challenge_period_extension" numeric null, "paid_at" integer null, "released_at" integer null,
- "refunded_at" integer null, "settled_at" integer null, "challenged_at" integer null,
- "claimed" boolean NOT NULL DEFAULT false, "arbitrated" boolean NOT NULL DEFAULT false,
- "latest_settlement_offer_address" text null, "latest_settlement_offer_seller" integer null, "latest_settlement_offer_buyer" integer null,
- "amount_seller" numeric null, "amount_buyer" numeric null, "amount_protocol" numeric null, "amount_arbitrator" numeric null,
- "amount_marketplace" numeric null, "payment_reference" text null, PRIMARY KEY ("escrow_id"), UNIQUE ("escrow_id"), UNIQUE ("deposit_transaction_hash"));
-
-
-
+ALTER TABLE events
+ADD COLUMN payment_reference VARCHAR;
 
 CREATE OR REPLACE FUNCTION update_escrow_status()
     RETURNS trigger AS $BODY$
@@ -111,53 +87,6 @@ CREATE OR REPLACE FUNCTION update_escrow_status()
 
     $BODY$ LANGUAGE plpgsql;
 
-
-
 DROP TRIGGER IF EXISTS update_escrow_status_trigger on "events";
 
 CREATE TRIGGER update_escrow_status_trigger AFTER INSERT ON "events" FOR EACH ROW EXECUTE PROCEDURE update_escrow_status();
-
-
-CREATE OR REPLACE VIEW "public"."escrow_status_view" AS
-select e.*,
-    CASE
-        WHEN e.challenge_period_end < cast(extract(epoch from now()) as integer) AND (e.name != 'Release' AND e.name != 'Refund' AND e.name != 'Settled') THEN 'PERIOD_EXPIRED'
-        WHEN e.name = 'Pay' THEN 'PAID'
-        WHEN e.name = 'Release' THEN 'RELEASED'
-        WHEN e.name = 'Refund' THEN 'REFUNDED'
-        WHEN e.name = 'Challenge' THEN 'CHALLENGED'
-        WHEN e.name = 'SettlementOffer' THEN 'SETTLEMENT'
-        WHEN e.name = 'Settled' THEN 'SETTLED'
-        ELSE UPPER(e.name)
-    END status
-from escrow_status e;
-
-
-
-CREATE OR REPLACE FUNCTION check_marketplace_address()
-    RETURNS trigger AS $BODY$
-
-    BEGIN
-
-        IF EXISTS (SELECT FROM marketplace m WHERE m.address = '*') THEN 
-            RETURN NEW;
-        END IF;
-
-        IF EXISTS (SELECT FROM marketplace m WHERE UPPER(m.address) = UPPER(NEW.marketplace)) THEN 
-            RETURN NEW;
-        END IF;
-    
-        IF EXISTS (SELECT FROM events e where e.escrow_id = NEW.escrow_id) THEN
-            RETURN NEW;
-        END IF;
-    
-        RETURN NULL;
-
-    END;
-
-    $BODY$ LANGUAGE plpgsql;
-
-
-DROP TRIGGER IF EXISTS check_marketplace_address_trigger on "events";
-
-CREATE TRIGGER check_marketplace_address_trigger BEFORE INSERT ON "events" FOR EACH ROW EXECUTE PROCEDURE check_marketplace_address();

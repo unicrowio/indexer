@@ -1,4 +1,4 @@
-FROM node:16.14.2
+FROM node:22
 
 WORKDIR /usr/api
 COPY ["src", "./src"]

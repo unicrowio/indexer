@@ -4,14 +4,14 @@
   "description": "Crow API and Indexer",
   "type": "module",
   "scripts": {
-    "dev": "docker-compose up",
+    "dev": "docker compose up",
     "migrate:apply": "hasura migrate apply",
     "migrate:export": "hasura migrate create init --from-server",
     "seed:apply": "hasura seed apply",
     "seed:export": "hasura seed create tables_seed",
     "metadata:apply": "hasura metadata apply",
     "metadata:export": "hasura metadata export",
-    "hasura": "docker-compose up -d && hasura console"
+    "hasura": "docker compose up -d && hasura console"
   },
   "devDependencies": {
     "hasura-cli": "2.7.0"
