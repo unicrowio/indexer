@@ -48,7 +48,7 @@
     "@types/koa-graphql": "^0.8.7",
     "@types/koa-router": "7.4.4",
     "@types/node": "^18.11.11",
-    "@unicrowio/ethers-types": "^1.2.0-beta.0",
+    "@unicrowio/ethers-types": "^1.2.1",
     "babel-loader": "9.1.0",
     "husky": "^8.0.0",
     "rome": "^11.0.0",
