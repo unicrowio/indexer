@@ -1,0 +1,54 @@
+table:
+  name: escrow_status_view
+  schema: public
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - arbitrated
+        - claimed
+        - created_at
+        - block_number
+        - challenged_at
+        - consensus_buyer
+        - consensus_seller
+        - latest_settlement_offer_buyer
+        - latest_settlement_offer_seller
+        - paid_at
+        - refunded_at
+        - released_at
+        - settled_at
+        - split_buyer
+        - split_marketplace
+        - split_protocol
+        - split_seller
+        - amount
+        - amount_arbitrator
+        - amount_buyer
+        - amount_marketplace
+        - amount_protocol
+        - amount_seller
+        - arbitrator_fee
+        - challenge_period
+        - challenge_period_end
+        - challenge_period_extension
+        - challenge_period_start
+        - escrow_id
+        - marketplace_fee
+        - arbitrator
+        - arbitrator_proposer
+        - buyer
+        - currency
+        - deposit_transaction_hash
+        - id
+        - latest_settlement_offer_address
+        - marketplace
+        - name
+        - payment_reference
+        - seller
+        - status
+        - status_arbitration
+        - transaction_hash
+      filter: {}
+      allow_aggregations: true
+    comment: ""

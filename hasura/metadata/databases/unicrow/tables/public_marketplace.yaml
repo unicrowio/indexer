@@ -2,9 +2,10 @@ table:
   name: marketplace
   schema: public
 select_permissions:
-  - permission:
-      allow_aggregations: true
+  - role: anonymous
+    permission:
       columns:
         - address
       filter: {}
-    role: anonymous
+      allow_aggregations: true
+    comment: ""
