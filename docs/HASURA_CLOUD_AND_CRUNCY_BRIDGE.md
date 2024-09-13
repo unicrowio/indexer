@@ -1,88 +1,51 @@
 
-# Hosting the Indexer
+# Using Hasura (GraphQL API) and Crunchy Bridge (Postgres DB)
 
-> Hosting the indexer using Hasura Cloud as backend provider and Cruncy Bridge as postgres database provider
+> This doc shows how to configure Hasura Cloud as your GraphQL API provider and Crunchy Bridge as your Postgres database provider.
 
 ## Crunchy Bridge
 
-[Create and account and go to the Dashboard](https://www.crunchybridge.com/dashboard).
+[Create an account and go to the Dashboard](https://www.crunchybridge.com/dashboard).
 
-You should create a cluster (Provision a Cluster).
+Create (provision) a cluster and open its control panel.
 
-* Create Cluster
-* replace the Cluster name if you want, not required.
-* Choose the Cloud Provider (AWS)
-* Select the Region (US East (N. Virginia)
-* Tier (Hooby-1) * you can change it as you need
-* version: Postgres 15
-* Storage: 25 GB you can scale the disk
-* High Availability = yes
-* Create Cluster
+### Getting your new database's connection string
 
-You will be redirected to the Cluster Overview.
+* Go to the `Connection` tab and select `Hasura`. 
 
-### Conection with Hasura Cloud
+* Select `Role: application` and `URL` format.
 
-https://www.crunchybridge.com/clusters/
+* Copy the URL in a temporary (and safe) place, you will need it soon. Note: If you experience connection errors related to encryption, try appending ?sslmode=require to the end of the connection URL.
 
-* Go to the tab Connection, choose Hasura.
-
-> Credential access is tracked in log
-
-* Choose Role: application
-
-copy the URL of string of connection and save it in some place, you will need this to connect from hasura backend to the crunchybridge postgress database.
-
-
-## Hasura Cloud 
+## Hasura Cloud
 
 ### Creating the Project
 
 [Create and account and go to the Projects menu](https://cloud.hasura.io/projects).
 
-* New Project
-* Choose a pricing plan
-* Select a region where the infrasctructure will be run on AWS.
-* Click in Create the Project button.
+* Create a new project. The name you choose, like myapp-production or myapp-staging, will become the subdomain part of the GraphQL API URL. e.g. https://myapp-production.hasura.app/v1/graphql
 
-You will be redirected to the project settings.
+### Settings
 
-You can change the name, like myapp-production or myapp-staging, this will be a part of the graphql URL API. ex: https://myapp-production.hasura.app/v1/graphql
-
-### Settings GUI Hasura Cloud
-
-* General - Envoriment Name: edit to prod or staging
-* Env vars:
-  - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=public
+* Go to the project's [Settings](https://cloud.hasura.io/project/YOUR_PROJECT_ID/details), then to the `Env vars` tab
+* Add the following variables:
+  - HASURA_GRAPHQL_DATABASE_URL=<your_db_connection_url>
+  - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=anonymous
   - HASURA_GRAPHQL_CORS_DOMAIN=*
-  - HASURA_GRAPHQL_ADMIN_SECRET=
+  - HASURA_GRAPHQL_ADMIN_SECRET=<your_admin_secret>
 
-### Connecting to the database
+### Bootstrap metadata (schema tracking, API configuration and permissions, etc.) importing the provided file
 
-* Go to the https://cloud.hasura.io/projects and Lunch Console of your project.
-* Go to the DATA tab
-* Go the the Connect Existing Database
-  - Database Display Name = default
-  - Data Source Driver = Postgres
-  - Connect Database Via -> Database URL
+* Go to the [Metadata Actions page](https://cloud.hasura.io/project/YOUR_PROJECT_ID/console/settings/metadata-actions) in your project's settings.
 
-Paste in the input the string of postgres connection that you got above, in the Crunchy Bridge configuration.
+* Click `Import metadata`, and select the provided file: [hasura/hasura_metadata.json](../hasura/hasura_metadata.json)
 
-* click in the button: Connect Database.
+### Connecting to the database and creating the schema
 
-* Go to the SQL.
-   - Copy/Paste the SQL script from [hasura/migrations/default/1641864689790_squashed/up.sql](../hasura/migrations/default/1641864689790_squashed/up.sql) and run.
+* Go to the [Data tab](https://cloud.hasura.io/project/YOUR_PROJECT_ID/console/data/manage) of your project. If the database connection string was set correctly and the metadata file has been imported, you should already see your database in the list.
+* If that's not the case, you can try adding it manually from this page.
+* Once the database is connected, go to the SQL tab and copy-paste the entire SQL init script from [hasura/migrations/unicrow/1726203142180_squashed/up.sql](../hasura/migrations/unicrow/1726203142180_squashed/up.sql). In the script, replace the block number with the one where you want the indexing to start (recommended), and (optionally) set one or more specific Marketplace addresses (see [README.md](../README.md)); then, finally, run it.
 
-### Update the Settings:
+If all the operations succeeded, your Hasura GraphQL API should now be linked with your database and be ready to use!
 
-* Go to the [settings pages](https://cloud.hasura.io/project/YOUR_PROJECT_ID/console/settings/metadata-actions)
-
-* Update the values from  [hasura/hasura_metadata_customers.json](../hasura/hasura_metadata_customers.json):
-  - NAME_OF_THE_APP="unicrow-my-app"
-  - X_HASURA_SECRET_KEY_VALUE="any secret here"
-  - DATABASE_URL="same postgres URL connection you have generated above"
-
-* Import metadata, choose the file with the variables values above updated: [hasura/hasura_metadata_customers.json](../hasura/hasura_metadata_customers.json)
-
-
-Finished. Everything should be works. 🚀
+P.S. You might want to review and tweak settings and permissions according to your own needs and preferences.

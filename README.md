@@ -10,7 +10,7 @@ Check out [Unicrow SDK Tutorial](https://github.com/unicrowio/sdk-tutorial) to l
 
 ### Configuration
 
-Create and fill an `.env` file (see `.env.example`).
+Create a copy of the example file `.env.example` named `.env` and fill it out according to your setup and preferences.
 
 ### Database
 
@@ -24,22 +24,24 @@ It is then critical for you to:
 
 **Important: failing to clean or reconfigure the environment properly could result in inconsistent, unpredictable data.**
 
+#### Setting the initial block number (recommended)
+
+Open `hasura/migrations/unicrow/1726203142180_squashed/up.sql`
+
+Replace `0` with the block number where indexing should start e.g. the launch of your marketplace, or few blocks before the deployment of Unicrow on that specific network.
+
+```
+INSERT INTO last_block_number (block_number) VALUES (0);
+```
+
 #### Setting the Marketplace addresses
 
-Open `hasura/migrations/default/1641864689790_squashed/up.sql`
+Open `hasura/migrations/unicrow/1726203142180_squashed/up.sql`
 
 Replace `*` with your marketplace's address. To add multiple addresses, duplicate the line.
 
 ```
 INSERT INTO marketplace (address) VALUES ('*');
-```
-
-#### Setting the initial block number
-
-In the same file as above, replace `0` with the block number where indexing should start (e.g. a block before the first contract of the set was deployed).
-
-```
-INSERT INTO last_block_number (block_number) VALUES (0);
 ```
 
 ### Build and run a full local environment using Docker Compose

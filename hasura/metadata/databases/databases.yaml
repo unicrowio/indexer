@@ -3,7 +3,7 @@
   configuration:
     connection_info:
       database_url:
-        from_env: POSTGRES_CONNECTION_STRING
+        from_env: HASURA_GRAPHQL_DATABASE_URL
       isolation_level: read-committed
       use_prepared_statements: false
   tables: "!include unicrow/tables/tables.yaml"

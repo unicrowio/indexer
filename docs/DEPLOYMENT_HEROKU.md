@@ -64,7 +64,7 @@ the address should be the link to your app.
 ```bash
  npx hasura migrate apply --endpoint "https://crow-indexer-test.herokuapp.com"
 
-✔ default
+✔ unicrow
 INFO migrations applied
 ```
 
