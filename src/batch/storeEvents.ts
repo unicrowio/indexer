@@ -1,18 +1,18 @@
 import async from "async";
 import { ethers } from "ethers";
 
-import { _EVENTS } from "../parsers/constants";
-import { getBlockNumber, multipleInserts } from "../graphql/functions";
-import { IContracts } from "../config/contract";
-import { parse } from "../parsers/parser";
-import { EventMutationInput } from "../types";
-import logger from "../infra/logger";
+import { _EVENTS } from "../parsers/constants.js";
+import { getBlockNumber, multipleInserts } from "../graphql/functions.js";
+import { IContracts } from "../config/contract.js";
+import { parse } from "../parsers/parser.js";
+import { EventMutationInput } from "../types/index.js";
+import logger from "../infra/logger.js";
 
-// Limit of the events I can get from blockchain per time. Ex: from: 0 to: 10000
+// Number of blocks per query
 const LIMIT = 5000;
 
 export const storeEvents = async (
-  provider: ethers.providers.JsonRpcProvider,
+  provider: ethers.JsonRpcProvider,
   contracts: IContracts,
 ) => {
   const latestBlockNumberBlockchain = await provider.getBlockNumber();
@@ -67,7 +67,7 @@ export const storeEvents = async (
     );
   });
 
-  let result: any = await async.parallelLimit(promises, 10);
+  const result: any = await async.parallelLimit(promises, 10);
 
   // clean the events with only the object event
   const _events = result
@@ -81,10 +81,8 @@ export const storeEvents = async (
   );
 
   const parsedEvents = events
-    .filter((e: any) => _EVENTS.includes(e.event)) // ignore the OwnershipTransferred event and others not related to the indexer
-    .flatMap((event: any) => {
-      return parse(event);
-    }) as EventMutationInput[];
+    .filter((e: any) => _EVENTS.includes(e.fragment?.name)) // ignore the OwnershipTransferred event and others not related to the indexer
+    .flatMap((event: any) => parse(event)) as EventMutationInput[];
 
   logger.info("⌗ Storing the events");
 

@@ -1,13 +1,10 @@
 import { createServer } from "http";
-import dotenv from "dotenv";
-dotenv.config();
-
-import config from "./env";
-import { getContracts, getProvider } from "./config/contract";
-import { storeEvents } from "./batch/storeEvents";
-import app from "./app";
-import env from "./env";
-import logger from "./infra/logger";
+import config from "./env.js";
+import { getContracts, getProvider } from "./config/contract.js";
+import { storeEvents } from "./batch/storeEvents.js";
+import app from "./app.js";
+import env from "./env.js";
+import logger from "./infra/logger.js";
 
 const sleep = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));

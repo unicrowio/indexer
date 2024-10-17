@@ -1,24 +1,22 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "commonjs",
+    "target": "ESNext",
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
+    "lib": ["ESNext"],
+    "allowSyntheticDefaultImports": true,
     "declaration": true,
     "declarationMap": true,
-    "lib": ["es6", "dom"],
     "removeComments": true,
-    "typeRoots": ["./node_modules/@types", "src/@types"],
+    "typeRoots": ["node_modules/@types", "src/@types"],
     "sourceMap": true,
-    "outDir": "lib",
+    "outDir": "build",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "rootDir": ".",
-    "baseUrl": "src",
-    "paths": {
-      "*": ["src/*"]
-    }
+    "rootDir": "src",
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "build/**"]

@@ -1,6 +1,6 @@
-import { CONSENSUS, Event, SPLIT } from "./constants";
-import logger from "../infra/logger";
-import { EventMutationInput, IEvent } from "../types";
+import { CONSENSUS, Event, SPLIT } from "./constants.js";
+import logger from "../infra/logger.js";
+import { EventMutationInput, IEvent } from "../types/index.js";
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
@@ -35,7 +35,7 @@ const parseClaim = (e: IEvent): EventMutationInput => {
     name: Event.Claim,
     transaction_hash: e.transactionHash,
     block_number: e.blockNumber,
-    escrow_id: escrow_id.toString(),
+    escrow_id: Number(escrow_id),
     amount_buyer: amount_buyer.toString(),
     amount_seller: amount_seller.toString(),
     amount_marketplace: amount_marketplace.toString(),
@@ -58,9 +58,9 @@ const parseClaimMultiple = (e: IEvent): EventMutationInput[] => {
 
     return {
       name: Event.Claim,
-      transaction_hash: e.transactionHash + "_" + escrow_id.toString(),
+      transaction_hash: `${e.transactionHash}_${escrow_id.toString()}`,
       block_number: e.blockNumber,
-      escrow_id: escrow_id.toString(),
+      escrow_id: Number(escrow_id),
       amount_buyer: amount_buyer.toString(),
       amount_seller: amount_seller.toString(),
       amount_marketplace: amount_marketplace.toString(),
@@ -71,9 +71,9 @@ const parseClaimMultiple = (e: IEvent): EventMutationInput[] => {
 };
 
 export const parse = (e: IEvent) => {
-  logger.info(`👉🏼 Parsing event: ${e.event}`);
+  logger.info(`👉🏼 Parsing event: ${e.fragment.name}`);
 
-  const event = e.event;
+  const event = e.fragment.name;
 
   if (event === Event.ClaimMultiple) {
     return parseClaimMultiple(e);
@@ -82,7 +82,7 @@ export const parse = (e: IEvent) => {
     return parseClaim(e);
   }
 
-  const escrow_id = "escrowId" in e.args && e.args.escrowId.toNumber();
+  const escrow_id = Number(e.args.escrowId);
   const escrow = e.args.escrow;
   const transactionHash = e.transactionHash;
   const blockNumber = e.blockNumber;
@@ -97,44 +97,50 @@ export const parse = (e: IEvent) => {
   const name = event;
   const transaction_hash = transactionHash;
   const block_number = blockNumber;
-  const consensus = escrow && escrow[position.CONSENSUS];
-  const split = escrow && escrow[position.SPLIT];
+  const consensus = escrow?.[position.CONSENSUS];
+  const split = escrow?.[position.SPLIT];
 
-  const amount = escrow && escrow[position.AMOUNT];
-  const payment_reference = escrow && escrow[position.PAYMENT_REFERENCE];
-  const currency = escrow && escrow[position.CURRENCY];
-  const marketplace = escrow && escrow[position.MARKETPLACE];
-  const marketplace_fee = escrow && escrow[position.MARKETPLACE_FEE];
-  const challenge_period = challengePeriod?.toNumber() || null;
-  const challenge_period_start =
-    escrow && escrow[position.CHALLENGE_PERIOD_START];
-  const challenge_period_end = escrow && escrow[position.CHALLENGE_PERIOD_END];
-  const challenge_period_extension =
-    (escrow && escrow[position.CHALLENGE_PERIOD_OR_EXTENSION]?.toNumber()) ||
-    null;
+  const amount = escrow?.[position.AMOUNT];
+  const payment_reference = escrow?.[position.PAYMENT_REFERENCE];
+  const currency = escrow?.[position.CURRENCY];
+  const marketplace = escrow?.[position.MARKETPLACE];
+  const marketplace_fee = escrow?.[position.MARKETPLACE_FEE];
+  const challenge_period = challengePeriod
+    ? Number(challengePeriod)
+    : undefined;
+  const challenge_period_start = escrow?.[position.CHALLENGE_PERIOD_START]
+    ? Number(escrow?.[position.CHALLENGE_PERIOD_START])
+    : undefined;
+  const challenge_period_end = escrow?.[position.CHALLENGE_PERIOD_END]
+    ? Number(escrow?.[position.CHALLENGE_PERIOD_END])
+    : undefined;
+  const challenge_period_extension = escrow?.[
+    position.CHALLENGE_PERIOD_OR_EXTENSION
+  ]
+    ? Number(escrow?.[position.CHALLENGE_PERIOD_OR_EXTENSION])
+    : undefined;
 
-  const created_at = blockTime?.toNumber() || null;
-  const buyer = escrow && escrow[position.BUYER];
-  const seller = escrow && escrow[position.SELLER];
-  const _arbitrator = arbitrator === ZERO_ADDRESS ? null : arbitrator;
+  const created_at = Number(blockTime);
+  const buyer = escrow?.[position.BUYER];
+  const seller = escrow?.[position.SELLER];
+  const _arbitrator = arbitrator === ZERO_ADDRESS ? undefined : arbitrator;
   const arbitrator_fee =
-    arbitrator === ZERO_ADDRESS ? null : arbitratorFee?.toString();
+    arbitrator === ZERO_ADDRESS ? undefined : arbitratorFee?.toString();
 
-  const latest_settlement_offer_address = whoMadelatestSettlementOffer || null;
-  const latest_settlement_offer_buyer: number | null = latestSettlementOffer
-    ? latestSettlementOffer[0]
-    : null;
-  const latest_settlement_offer_seller: number | null = latestSettlementOffer
-    ? latestSettlementOffer[1]
-    : null;
+  const latest_settlement_offer_address =
+    whoMadelatestSettlementOffer || undefined;
+  const latest_settlement_offer_buyer: number | undefined =
+    latestSettlementOffer ? Number(latestSettlementOffer[0]) : undefined;
+  const latest_settlement_offer_seller: number | undefined =
+    latestSettlementOffer ? Number(latestSettlementOffer[1]) : undefined;
 
-  const consensus_buyer = consensus && consensus[CONSENSUS.Buyer];
-  const consensus_seller = consensus && consensus[CONSENSUS.Seller];
+  const consensus_buyer = consensus && Number(consensus[CONSENSUS.Buyer]);
+  const consensus_seller = consensus && Number(consensus[CONSENSUS.Seller]);
 
-  const split_buyer = split && split[SPLIT.Buyer];
-  const split_seller = split && split[SPLIT.Seller];
-  const split_marketplace = split && split[SPLIT.Marketplace];
-  const split_protocol = split && split[SPLIT.Protocol];
+  const split_buyer = split && Number(split[SPLIT.Buyer]);
+  const split_seller = split && Number(split[SPLIT.Seller]);
+  const split_marketplace = split && Number(split[SPLIT.Marketplace]);
+  const split_protocol = split && Number(split[SPLIT.Protocol]);
 
   let _amounts: undefined | Record<string, string>;
   if (amounts) {
@@ -161,29 +167,23 @@ export const parse = (e: IEvent) => {
     escrow_id,
     buyer,
     seller,
-    marketplace: marketplace === ZERO_ADDRESS ? null : marketplace,
+    marketplace: marketplace === ZERO_ADDRESS ? undefined : marketplace,
     currency,
     created_at,
-    amount: amount ? amount.toString() : amount,
+    amount: amount?.toString(),
     split_buyer,
     split_seller,
     split_marketplace,
     split_protocol,
     consensus_buyer,
     consensus_seller,
-    marketplace_fee: marketplace_fee
-      ? String(marketplace_fee)
-      : marketplace_fee,
+    marketplace_fee: marketplace_fee?.toString(),
     challenge_period,
-    challenge_period_start: challenge_period_start
-      ? challenge_period_start.toNumber()
-      : challenge_period_start,
-    challenge_period_end: challenge_period_end
-      ? challenge_period_end.toNumber()
-      : challenge_period_end,
+    challenge_period_start,
+    challenge_period_end,
     challenge_period_extension,
-    arbitrator: _arbitrator || null,
-    arbitrator_fee: arbitrator_fee || null,
+    arbitrator: _arbitrator || undefined,
+    arbitrator_fee: arbitrator_fee || undefined,
     latest_settlement_offer_address,
     latest_settlement_offer_buyer,
     latest_settlement_offer_seller,

@@ -1,6 +1,7 @@
-import config from "../env";
 import { GraphQLClient } from "graphql-request";
-import logger from "../infra/logger";
+
+import config from "../env.js";
+import logger from "../infra/logger.js";
 
 logger.info(`🎧 - HASURA_GRAPHQL_URL: ${config.HASURA_GRAPHQL_URL}`);
 

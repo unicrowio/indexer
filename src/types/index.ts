@@ -47,7 +47,9 @@ export type EventMutationInput = {
 };
 
 export interface IEvent {
-  event: EventName;
+  fragment: {
+    name: EventName;
+  };
   transactionHash: string;
   blockNumber: number;
   args: any;
