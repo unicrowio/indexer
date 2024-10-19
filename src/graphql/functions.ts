@@ -3,18 +3,19 @@ import { bulkInsertEventsMutation } from "./mutations.js";
 import { getBlockNumberQuery } from "./queries.js";
 import { EventMutationInput } from "../types/index.js";
 
-export const getBlockNumber = async () => {
-  const data = await client.rawRequest<any>(getBlockNumberQuery);
-  const blockNumber = data.data.last_block_number[0].block_number;
-  return blockNumber;
+export const getLastIdxBlock = async (network: string) => {
+  const data = await client.rawRequest<any>(getBlockNumberQuery, { network });
+  return data.data?.last_block_number[0]?.block_number;
 };
 
 export const multipleInserts = async (
-  events: EventMutationInput[],
+  network: string,
   blockNumber: number,
+  events: EventMutationInput[],
 ) => {
   await client.request(bulkInsertEventsMutation, {
-    events,
+    network,
     blockNumber,
+    events,
   });
 };

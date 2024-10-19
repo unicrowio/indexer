@@ -2,7 +2,7 @@ import async from "async";
 import { ethers } from "ethers";
 
 import { _EVENTS } from "../parsers/constants.js";
-import { getBlockNumber, multipleInserts } from "../graphql/functions.js";
+import { getLastIdxBlock, multipleInserts } from "../graphql/functions.js";
 import { IContracts } from "../config/contract.js";
 import { parse } from "../parsers/parser.js";
 import { EventMutationInput } from "../types/index.js";
@@ -13,24 +13,25 @@ const LIMIT = 5000;
 
 export const storeEvents = async (
   provider: ethers.JsonRpcProvider,
+  network: string,
   contracts: IContracts,
 ) => {
-  const latestBlockNumberBlockchain = await provider.getBlockNumber();
-  const lastBlockNumberInDb: number = await getBlockNumber();
+  const lastChainBlock = await provider.getBlockNumber();
+  const lastIdxBlock: number = await getLastIdxBlock(network);
 
-  logger.info(`⌗ Last indexed block: ${lastBlockNumberInDb}`);
-  logger.info(`⌗ Chain last block: ${latestBlockNumberBlockchain}`);
+  logger.info(`[${network}] last indexed block: ${lastIdxBlock}`);
+  logger.info(`[${network}] chain last block: ${lastChainBlock}`);
 
-  if (latestBlockNumberBlockchain <= lastBlockNumberInDb) return;
+  if (lastChainBlock <= lastIdxBlock) return;
 
-  const lastBlockNumberInDbPlusOne = lastBlockNumberInDb + 1;
-  let lastBlockNumberInDbPlusLimit = lastBlockNumberInDb + LIMIT;
-  if (lastBlockNumberInDbPlusLimit > latestBlockNumberBlockchain) {
-    lastBlockNumberInDbPlusLimit = latestBlockNumberBlockchain;
+  const lastIdxBlockPlusOne = lastIdxBlock + 1;
+  let lastIdxBlockPlusLimit = lastIdxBlock + LIMIT;
+  if (lastIdxBlockPlusLimit > lastChainBlock) {
+    lastIdxBlockPlusLimit = lastChainBlock;
   }
 
   logger.info(
-    `⌗ Indexing blocks from: ${lastBlockNumberInDbPlusOne} to: ${lastBlockNumberInDbPlusLimit}`,
+    `[${network}] indexing blocks from: ${lastIdxBlockPlusOne} to: ${lastIdxBlockPlusLimit}`,
   );
 
   const promises = [];
@@ -38,32 +39,32 @@ export const storeEvents = async (
   promises.push(async function () {
     return contracts.unicrow.queryFilter(
       "*" as any,
-      lastBlockNumberInDbPlusOne,
-      lastBlockNumberInDbPlusLimit,
+      lastIdxBlockPlusOne,
+      lastIdxBlockPlusLimit,
     );
   });
 
   promises.push(async function () {
     return contracts.unicrowDispute.queryFilter(
       "*" as any,
-      lastBlockNumberInDbPlusOne,
-      lastBlockNumberInDbPlusLimit,
+      lastIdxBlockPlusOne,
+      lastIdxBlockPlusLimit,
     );
   });
 
   promises.push(async function () {
     return contracts.unicrowArbitrator.queryFilter(
       "*" as any,
-      lastBlockNumberInDbPlusOne,
-      lastBlockNumberInDbPlusLimit,
+      lastIdxBlockPlusOne,
+      lastIdxBlockPlusLimit,
     );
   });
 
   promises.push(async function () {
     return contracts.unicrowClaim.queryFilter(
       "*" as any,
-      lastBlockNumberInDbPlusOne,
-      lastBlockNumberInDbPlusLimit,
+      lastIdxBlockPlusOne,
+      lastIdxBlockPlusLimit,
     );
   });
 
@@ -82,13 +83,14 @@ export const storeEvents = async (
 
   const parsedEvents = events
     .filter((e: any) => _EVENTS.includes(e.fragment?.name)) // ignore the OwnershipTransferred event and others not related to the indexer
-    .flatMap((event: any) => parse(event)) as EventMutationInput[];
+    .flatMap((event: any) => parse(network, event)) as EventMutationInput[];
 
-  logger.info("⌗ Storing the events");
+  logger.info(`[${network}] storing the events`);
 
   // only update the block_number with latest indexed block OR store events and update block_number too
   await multipleInserts(
+    network,
+    lastIdxBlockPlusLimit,
     parsedEvents.length > 0 ? parsedEvents : [],
-    lastBlockNumberInDbPlusLimit,
   );
 };

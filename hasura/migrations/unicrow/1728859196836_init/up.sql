@@ -1,11 +1,6 @@
-CREATE TABLE "public"."last_block_number" ("id" serial NOT NULL, "block_number" integer NOT NULL, PRIMARY KEY ("id") , UNIQUE ("id"));
+CREATE TABLE "public"."last_block_number" ("network" text NOT NULL, "block_number" integer NOT NULL, PRIMARY KEY ("network") , UNIQUE ("network"));
 
-CREATE TABLE "public"."marketplace" ("address" text NOT NULL, PRIMARY KEY ("address") , UNIQUE ("address"));
-
-INSERT INTO marketplace (address) VALUES ('*'); -- Add your marketplace address, * you will get events from all marketplaces. Duplicate the line to add more
-INSERT INTO last_block_number (block_number) VALUES (0); -- replace 0 with the block number from which the indexing should start (if you're deploying a new app, than most probably the latest block)
-
-CREATE TABLE "public"."events" ("id" serial NOT NULL, "name" text NOT NULL, "transaction_hash" text NOT NULL,
+CREATE TABLE "public"."events" ("id" serial NOT NULL, "network" text NOT NULL, "name" text NOT NULL, "transaction_hash" text NOT NULL,
 "block_number" integer NOT NULL, "escrow_id" numeric NOT NULL, "buyer" text, "seller" text,
 "currency" text, "amount" numeric, "split_seller" integer, "split_buyer" integer, "split_marketplace" integer,
 "split_protocol" integer, "consensus_seller" integer, "consensus_buyer" integer,
@@ -24,8 +19,6 @@ CREATE  INDEX "seller_indexer" ON
 
 CREATE  INDEX "escrowid-indexer" ON
   "public"."events" using btree ("escrow_id");
-
-
 
 CREATE OR REPLACE FUNCTION generate_random_id(length integer)
 RETURNS text AS $$
@@ -48,8 +41,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
-CREATE TABLE "public"."escrow_status" ("id" text default generate_random_id(6) NOT NULL, "name" text NOT NULL, "escrow_id" numeric null, "transaction_hash" text null, "block_number" integer, "deposit_transaction_hash" text null,
+CREATE TABLE "public"."escrow_status" ("id" text default generate_random_id(6) NOT NULL, "network" text NOT NULL, "name" text NOT NULL, "escrow_id" numeric null, "transaction_hash" text null, "block_number" integer, "deposit_transaction_hash" text null,
  "buyer" text null, "seller" text NOT NULL, "currency" text NOT NULL, "amount" numeric NOT NULL, "split_seller" integer,
  "split_buyer" integer, "split_marketplace" integer, "split_protocol" integer, "consensus_seller" integer null,
  "consensus_buyer" integer null, "marketplace" text null, "marketplace_fee" numeric null,
@@ -60,9 +52,6 @@ CREATE TABLE "public"."escrow_status" ("id" text default generate_random_id(6) N
  "latest_settlement_offer_address" text null, "latest_settlement_offer_seller" integer null, "latest_settlement_offer_buyer" integer null,
  "amount_seller" numeric null, "amount_buyer" numeric null, "amount_protocol" numeric null, "amount_arbitrator" numeric null,
  "amount_marketplace" numeric null, "payment_reference" text null, PRIMARY KEY ("id"), UNIQUE ("id"), UNIQUE ("deposit_transaction_hash"));
-
-
-
 
 CREATE OR REPLACE FUNCTION update_escrow_status()
     RETURNS trigger AS $BODY$
@@ -78,10 +67,10 @@ CREATE OR REPLACE FUNCTION update_escrow_status()
             _status_arbitration = 'ArbitratorApproved';
         END IF;
         
-        INSERT INTO escrow_status AS escrows("name", "transaction_hash", "escrow_id", "buyer", "seller", "currency", "amount", "split_seller", "split_buyer", "split_marketplace", "split_protocol", "consensus_seller", "consensus_buyer", "marketplace", "marketplace_fee", "arbitrator", "arbitrator_fee", "arbitrator_proposer","status_arbitration", "challenge_period", "challenge_period_start", "challenge_period_end", "challenge_period_extension", "block_number", "paid_at", "created_at", "claimed", "deposit_transaction_hash", "payment_reference")
-        VALUES (NEW.name, NEW.transaction_hash, NEW.escrow_id, NEW.buyer, NEW.seller, NEW.currency, NEW.amount, NEW.split_seller, NEW.split_buyer, NEW.split_marketplace, NEW.split_protocol, NEW.consensus_seller, NEW.consensus_buyer, NEW.marketplace, NEW.marketplace_fee, NEW.arbitrator, NEW.arbitrator_fee, NEW.arbitrator_proposer, _status_arbitration, NEW.challenge_period, NEW.challenge_period_start, NEW.challenge_period_end, NEW.challenge_period_extension, NEW.block_number, NEW.created_at, to_timestamp(NEW.created_at)::date, false, NEW.transaction_hash, NEW.payment_reference)
+        INSERT INTO escrow_status AS escrows("network", "name", "transaction_hash", "escrow_id", "buyer", "seller", "currency", "amount", "split_seller", "split_buyer", "split_marketplace", "split_protocol", "consensus_seller", "consensus_buyer", "marketplace", "marketplace_fee", "arbitrator", "arbitrator_fee", "arbitrator_proposer","status_arbitration", "challenge_period", "challenge_period_start", "challenge_period_end", "challenge_period_extension", "block_number", "paid_at", "created_at", "claimed", "deposit_transaction_hash", "payment_reference")
+        VALUES (NEW.network, NEW.name, NEW.transaction_hash, NEW.escrow_id, NEW.buyer, NEW.seller, NEW.currency, NEW.amount, NEW.split_seller, NEW.split_buyer, NEW.split_marketplace, NEW.split_protocol, NEW.consensus_seller, NEW.consensus_buyer, NEW.marketplace, NEW.marketplace_fee, NEW.arbitrator, NEW.arbitrator_fee, NEW.arbitrator_proposer, _status_arbitration, NEW.challenge_period, NEW.challenge_period_start, NEW.challenge_period_end, NEW.challenge_period_extension, NEW.block_number, NEW.created_at, to_timestamp(NEW.created_at)::date, false, NEW.transaction_hash, NEW.payment_reference)
         ON conflict ("deposit_transaction_hash")
-        DO UPDATE SET name = NEW.name, transaction_hash = NEW.transaction_hash, escrow_id = NEW.escrow_id, buyer = NEW.buyer, seller = NEW.seller, currency = NEW.currency, amount = NEW.amount, split_seller = NEW.split_seller, split_buyer = NEW.split_buyer, split_marketplace = NEW.split_marketplace, split_protocol = NEW.split_protocol, consensus_seller = NEW.consensus_seller, consensus_buyer = NEW.consensus_buyer, marketplace = NEW.marketplace, marketplace_fee = NEW.marketplace_fee, arbitrator = NEW.arbitrator, arbitrator_proposer = NEW.arbitrator_proposer, status_arbitration = _status_arbitration, challenge_period = NEW.challenge_period, challenge_period_start = NEW.challenge_period_start, challenge_period_end = NEW.challenge_period_end, challenge_period_extension = NEW.challenge_period_extension, block_number = NEW.block_number, paid_at = NEW.created_at, claimed = false, amount_seller = NEW.amount_seller, amount_buyer = NEW.amount_buyer, amount_protocol = NEW.amount_protocol, amount_arbitrator = NEW.amount_arbitrator, amount_marketplace = NEW.amount_marketplace, deposit_transaction_hash = NEW.transaction_hash  WHERE escrows.deposit_transaction_hash = NEW.transaction_hash;
+        DO UPDATE SET network = NEW.network, name = NEW.name, transaction_hash = NEW.transaction_hash, escrow_id = NEW.escrow_id, buyer = NEW.buyer, seller = NEW.seller, currency = NEW.currency, amount = NEW.amount, split_seller = NEW.split_seller, split_buyer = NEW.split_buyer, split_marketplace = NEW.split_marketplace, split_protocol = NEW.split_protocol, consensus_seller = NEW.consensus_seller, consensus_buyer = NEW.consensus_buyer, marketplace = NEW.marketplace, marketplace_fee = NEW.marketplace_fee, arbitrator = NEW.arbitrator, arbitrator_proposer = NEW.arbitrator_proposer, status_arbitration = _status_arbitration, challenge_period = NEW.challenge_period, challenge_period_start = NEW.challenge_period_start, challenge_period_end = NEW.challenge_period_end, challenge_period_extension = NEW.challenge_period_extension, block_number = NEW.block_number, paid_at = NEW.created_at, claimed = false, amount_seller = NEW.amount_seller, amount_buyer = NEW.amount_buyer, amount_protocol = NEW.amount_protocol, amount_arbitrator = NEW.amount_arbitrator, amount_marketplace = NEW.amount_marketplace, deposit_transaction_hash = NEW.transaction_hash  WHERE escrows.deposit_transaction_hash = NEW.transaction_hash;
     ELSE
         SELECT * INTO escrow FROM escrow_status es where es.escrow_id = NEW.escrow_id;
         -- fallback - If the current block number is greater than the new event block number, then it out of date, don't need to update
@@ -135,12 +124,9 @@ CREATE OR REPLACE FUNCTION update_escrow_status()
 
     $BODY$ LANGUAGE plpgsql;
 
-
-
 DROP TRIGGER IF EXISTS update_escrow_status_trigger on "events";
 
 CREATE TRIGGER update_escrow_status_trigger AFTER INSERT ON "events" FOR EACH ROW EXECUTE PROCEDURE update_escrow_status();
-
 
 CREATE OR REPLACE VIEW "public"."escrow_status_view" AS
 select e.*,
@@ -155,33 +141,3 @@ select e.*,
         ELSE UPPER(e.name)
     END status
 from escrow_status e;
-
-
-
-CREATE OR REPLACE FUNCTION check_marketplace_address()
-    RETURNS trigger AS $BODY$
-
-    BEGIN
-
-        IF EXISTS (SELECT FROM marketplace m WHERE m.address = '*') THEN 
-            RETURN NEW;
-        END IF;
-
-        IF EXISTS (SELECT FROM marketplace m WHERE UPPER(m.address) = UPPER(NEW.marketplace)) THEN 
-            RETURN NEW;
-        END IF;
-    
-        IF EXISTS (SELECT FROM events e where e.escrow_id = NEW.escrow_id) THEN
-            RETURN NEW;
-        END IF;
-    
-        RETURN NULL;
-
-    END;
-
-    $BODY$ LANGUAGE plpgsql;
-
-
-DROP TRIGGER IF EXISTS check_marketplace_address_trigger on "events";
-
-CREATE TRIGGER check_marketplace_address_trigger BEFORE INSERT ON "events" FOR EACH ROW EXECUTE PROCEDURE check_marketplace_address();
