@@ -21,7 +21,7 @@
     "format": "rome format src/ --write"
   },
   "dependencies": {
-    "@unicrowio/ethers-types": "^1.2.1",
+    "@unicrowio/ethers-types": "^1.2.2",
     "async": "^3.2.6",
     "dotenv": "^16.4.5",
     "ethers": "^6.13.4",
