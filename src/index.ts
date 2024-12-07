@@ -16,13 +16,13 @@ const listenEvents = async () => {
     ([_, network]) => network.index,
   );
 
-  for (const [networkName, networkConfig] of enabledNetworks) {
-    const lastIdxBlock = await getLastIdxBlock(networkName);
+  for (const [chainId, networkConfig] of enabledNetworks) {
+    const lastIdxBlock = await getLastIdxBlock(chainId);
     if (!lastIdxBlock || lastIdxBlock < networkConfig.startingBlock) {
       logger.info(
-        `setting indexing starting block of network ${networkName} to ${networkConfig.startingBlock}...`,
+        `[${chainId}] setting indexing starting block to ${networkConfig.startingBlock}...`,
       );
-      await multipleInserts(networkName, networkConfig.startingBlock, []);
+      await multipleInserts(chainId, networkConfig.startingBlock, []);
     }
 
     const provider = getProvider(networkConfig.rpcHost);
@@ -31,10 +31,10 @@ const listenEvents = async () => {
     (async () => {
       while (true) {
         try {
-          logger.info(`listening for events on ${networkName}...`);
-          await storeEvents(provider, networkName, contracts);
+          logger.info(`[${chainId}] listening for events...`);
+          await storeEvents(provider, chainId, contracts);
         } catch (error) {
-          logger.error(`Error on ${networkName}: ${error}`);
+          logger.error(`[${chainId}] error: ${error}`);
         } finally {
           await sleep(config.TIME);
         }

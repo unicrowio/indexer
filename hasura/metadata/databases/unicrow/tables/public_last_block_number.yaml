@@ -6,7 +6,7 @@ select_permissions:
     permission:
       columns:
         - block_number
-        - network
+        - chain_id
       filter: {}
       allow_aggregations: true
     comment: ""

@@ -13,14 +13,14 @@ const LIMIT = 5000;
 
 export const storeEvents = async (
   provider: ethers.JsonRpcProvider,
-  network: string,
+  chainId: string,
   contracts: IContracts,
 ) => {
   const lastChainBlock = await provider.getBlockNumber();
-  const lastIdxBlock: number = await getLastIdxBlock(network);
+  const lastIdxBlock: number = await getLastIdxBlock(chainId);
 
-  logger.info(`[${network}] last indexed block: ${lastIdxBlock}`);
-  logger.info(`[${network}] chain last block: ${lastChainBlock}`);
+  logger.info(`[${chainId}] last indexed block: ${lastIdxBlock}`);
+  logger.info(`[${chainId}] chain last block: ${lastChainBlock}`);
 
   if (lastChainBlock <= lastIdxBlock) return;
 
@@ -31,7 +31,7 @@ export const storeEvents = async (
   }
 
   logger.info(
-    `[${network}] indexing blocks from: ${lastIdxBlockPlusOne} to: ${lastIdxBlockPlusLimit}`,
+    `[${chainId}] indexing blocks from: ${lastIdxBlockPlusOne} to: ${lastIdxBlockPlusLimit}`,
   );
 
   const promises = [];
@@ -83,13 +83,13 @@ export const storeEvents = async (
 
   const parsedEvents = events
     .filter((e: any) => _EVENTS.includes(e.fragment?.name)) // ignore the OwnershipTransferred event and others not related to the indexer
-    .flatMap((event: any) => parse(network, event)) as EventMutationInput[];
+    .flatMap((event: any) => parse(chainId, event)) as EventMutationInput[];
 
-  logger.info(`[${network}] storing the events`);
+  logger.info(`[${chainId}] storing the events`);
 
   // only update the block_number with latest indexed block OR store events and update block_number too
   await multipleInserts(
-    network,
+    chainId,
     lastIdxBlockPlusLimit,
     parsedEvents.length > 0 ? parsedEvents : [],
   );

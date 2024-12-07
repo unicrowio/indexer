@@ -20,7 +20,7 @@ const position = {
   PAYMENT_REFERENCE: 12,
 };
 
-const parseClaim = (network: string, e: IEvent): EventMutationInput => {
+const parseClaim = (chainId: string, e: IEvent): EventMutationInput => {
   const [escrow_id, payments] = e.args[0];
 
   const [
@@ -32,7 +32,7 @@ const parseClaim = (network: string, e: IEvent): EventMutationInput => {
   ] = payments;
 
   return {
-    network,
+    chainId,
     name: Event.Claim,
     transaction_hash: e.transactionHash,
     block_number: e.blockNumber,
@@ -46,7 +46,7 @@ const parseClaim = (network: string, e: IEvent): EventMutationInput => {
 };
 
 const parseClaimMultiple = (
-  network: string,
+  chainId: string,
   e: IEvent,
 ): EventMutationInput[] => {
   return e.args[0].map((item: any) => {
@@ -61,7 +61,7 @@ const parseClaimMultiple = (
     ] = payments;
 
     return {
-      network,
+      chainId,
       name: Event.Claim,
       transaction_hash: `${e.transactionHash}_${escrow_id.toString()}`,
       block_number: e.blockNumber,
@@ -75,16 +75,16 @@ const parseClaimMultiple = (
   });
 };
 
-export const parse = (network: string, e: IEvent) => {
-  logger.info(`[${network}] parsing event: ${e.fragment.name}`);
+export const parse = (chainId: string, e: IEvent) => {
+  logger.info(`[${chainId}] parsing event: ${e.fragment.name}`);
 
   const event = e.fragment.name;
 
   if (event === Event.ClaimMultiple) {
-    return parseClaimMultiple(network, e);
+    return parseClaimMultiple(chainId, e);
   }
   if (event === Event.Claim) {
-    return parseClaim(network, e);
+    return parseClaim(chainId, e);
   }
 
   const escrow_id = Number(e.args.escrowId);
@@ -166,7 +166,7 @@ export const parse = (network: string, e: IEvent) => {
   }
 
   const variables: EventMutationInput = {
-    network,
+    chainId,
     name,
     transaction_hash,
     block_number,

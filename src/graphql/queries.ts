@@ -1,8 +1,8 @@
 import { gql } from "graphql-request";
 
 export const getBlockNumberQuery = gql`
-  query getBlockNumber($network: String!) {
-    last_block_number(where: { network: { _eq: $network } }) {
+  query getBlockNumber($chainId: String!) {
+    last_block_number(where: { chain_id: { _eq: $chainId } }) {
       block_number
     }
   }

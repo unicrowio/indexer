@@ -36,7 +36,7 @@ select_permissions:
         - marketplace
         - marketplace_fee
         - name
-        - network
+        - chain_id
         - paid_at
         - payment_reference
         - refunded_at

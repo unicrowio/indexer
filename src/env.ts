@@ -33,13 +33,13 @@ function getValidateNetworks(key: string): Networks {
   try {
     const nets: Networks = JSON.parse(process.env[key] as string);
 
-    for (const [name, cfg] of Object.entries(nets)) {
+    for (const [chainId, cfg] of Object.entries(nets)) {
       if (cfg.index) {
         const url: string = cfg.rpcHost;
 
         if (!isValidUrl(url)) {
           throw new Error(
-            `network: ${name} is configured to be indexed (index=true) in .env, but its rpcHost is invalid (${url})`,
+            `[${chainId}] is configured to be indexed (index=true) in .env, but its rpcHost is invalid: ${url}`,
           );
         }
       }
@@ -47,7 +47,7 @@ function getValidateNetworks(key: string): Networks {
       Object.entries(cfg).forEach(([field, value]) => {
         if (value === undefined || value === null || value === "") {
           throw new Error(
-            `network: ${name} has an empty or missing value for the field: ${field}`,
+            `[${chainId}] has an empty or missing value for the field: ${field}`,
           );
         }
       });

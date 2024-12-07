@@ -32,7 +32,7 @@ select_permissions:
         - marketplace
         - marketplace_fee
         - name
-        - network
+        - chain_id
         - payment_reference
         - seller
         - split_buyer
