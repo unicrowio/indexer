@@ -12,7 +12,7 @@ export type EventName =
   | "Claim";
 
 export type EventMutationInput = {
-  chainId: string;
+  chain_id: string;
   name: EventName;
   transaction_hash: string;
   block_number: number;

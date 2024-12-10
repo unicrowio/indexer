@@ -32,7 +32,7 @@ const parseClaim = (chainId: string, e: IEvent): EventMutationInput => {
   ] = payments;
 
   return {
-    chainId,
+    chain_id: chainId,
     name: Event.Claim,
     transaction_hash: e.transactionHash,
     block_number: e.blockNumber,
@@ -166,7 +166,7 @@ export const parse = (chainId: string, e: IEvent) => {
   }
 
   const variables: EventMutationInput = {
-    chainId,
+    chain_id: chainId,
     name,
     transaction_hash,
     block_number,
