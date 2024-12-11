@@ -41,7 +41,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TABLE "public"."escrow_status" ("id" text default generate_random_id(6) NOT NULL, "chain_id" text NOT NULL, "chainName" text NOT NULL, "name" text NOT NULL, "escrow_id" numeric null, "transaction_hash" text null, "block_number" integer, "deposit_transaction_hash" text null,
+CREATE TABLE "public"."escrow_status" ("id" text default generate_random_id(6) NOT NULL, "chain_id" text NOT NULL, "name" text NOT NULL, "escrow_id" numeric null, "transaction_hash" text null, "block_number" integer, "deposit_transaction_hash" text null,
  "buyer" text null, "seller" text NOT NULL, "currency" text NOT NULL, "amount" numeric NOT NULL, "split_seller" integer,
  "split_buyer" integer, "split_marketplace" integer, "split_protocol" integer, "consensus_seller" integer null,
  "consensus_buyer" integer null, "marketplace" text null, "marketplace_fee" numeric null,
