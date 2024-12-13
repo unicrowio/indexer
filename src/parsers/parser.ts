@@ -61,7 +61,7 @@ const parseClaimMultiple = (
     ] = payments;
 
     return {
-      chainId,
+      chain_id: chainId,
       name: Event.Claim,
       transaction_hash: `${e.transactionHash}_${escrow_id.toString()}`,
       block_number: e.blockNumber,
