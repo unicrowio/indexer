@@ -12,7 +12,7 @@ Check out [Unicrow SDK Tutorial](https://github.com/unicrowio/sdk-tutorial) to l
 
 ### Configuration
 
-Create a copy of the example file `.env.example` named `.env` and fill it out according to your setup and preferences.
+Create a copy of the example file `.env.example` named `.env` and fill it out according to your setup and preferences. It is recommended to disable indexing of chains you don't plan to use and also to set starting block number to when you are launching your platform in order to not index past history that you're not interested in.
 
 ### Database
 
@@ -25,26 +25,6 @@ It is then critical for you to:
 - Configure the new indexing starting block (see below)
 
 **Important: failing to clean or reconfigure the environment properly could result in inconsistent, unpredictable data.**
-
-#### Setting the initial block number (recommended)
-
-Open `hasura/migrations/unicrow/1726203142180_squashed/up.sql`
-
-Replace `0` with the block number where indexing should start e.g. the launch of your marketplace on that specific network. Also replace 42161 with other chain you want to index or add multiple lines for multiple networks.
-
-```
-INSERT INTO last_block_number (chain_id, block_number) VALUES ("42161", 0); -- 
-```
-
-#### Setting the Marketplace addresses
-
-Open `hasura/migrations/unicrow/1726203142180_squashed/up.sql`
-
-Replace `*` with your marketplace's address. To add multiple addresses, duplicate the line.
-
-```
-INSERT INTO marketplace (address) VALUES ('*');
-```
 
 ### Build and run a full local environment using Docker Compose
 
