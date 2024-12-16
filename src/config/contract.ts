@@ -10,10 +10,10 @@ import {
   UnicrowClaim__factory,
 } from "@unicrowio/ethers-types";
 
-import env from "../env.js";
+import { Network } from "../env.js";
 
-export const getProvider = () => {
-  const provider = new ethers.JsonRpcProvider(env.RPC_HOST);
+export const getProvider = (rpc_host: string) => {
+  const provider = new ethers.JsonRpcProvider(rpc_host);
   return provider;
 };
 
@@ -24,25 +24,28 @@ export interface IContracts {
   unicrowClaim: UnicrowClaim;
 }
 
-export const getContracts = (provider: ethers.JsonRpcProvider): IContracts => {
+export const getContracts = (
+  provider: ethers.JsonRpcProvider,
+  network: Network,
+): IContracts => {
   const unicrow: Unicrow = Unicrow__factory.connect(
-    env.UNICROW_ADDRESS,
+    network.unicrowAddress,
     provider,
   );
 
   const unicrowDispute: UnicrowDispute = UnicrowDispute__factory.connect(
-    env.UNICROW_DISPUTE_ADDRESS,
+    network.unicrowDisputeAddress,
     provider,
   );
 
   const unicrowArbitrator: UnicrowArbitrator =
     UnicrowArbitrator__factory.connect(
-      env.UNICROW_ARBITRATOR_ADDRESS,
+      network.unicrowArbitratorAddress,
       provider,
     );
 
   const unicrowClaim: UnicrowClaim = UnicrowClaim__factory.connect(
-    env.UNICROW_CLAIM_ADDRESS,
+    network.unicrowClaimAddress,
     provider,
   );
 

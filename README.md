@@ -4,13 +4,15 @@
 
 The indexer keeps an up-to-date record of all escrowed payments relevant to platforms integrating Unicrow. It does it by listening to events from Unicrow smart contracts and optionally filtering them by marketplace addresses.
 
+The indexer supports all the chains that Unicrow is deployed at, currently Arbitrum and Base and their Sepolia testnets. You can enable or disable indexing from the networks in the configuration file (see below).
+
 Check out [Unicrow SDK Tutorial](https://github.com/unicrowio/sdk-tutorial) to learn how to query the indexed data.
 
 ## Getting Started
 
 ### Configuration
 
-Create a copy of the example file `.env.example` named `.env` and fill it out according to your setup and preferences.
+Create a copy of the example file `.env.example` named `.env` and fill it out according to your setup and preferences. It is recommended to disable indexing of chains you don't plan to use and also to set starting block number to when you are launching your platform in order to not index past history that you're not interested in.
 
 ### Database
 
@@ -23,26 +25,6 @@ It is then critical for you to:
 - Configure the new indexing starting block (see below)
 
 **Important: failing to clean or reconfigure the environment properly could result in inconsistent, unpredictable data.**
-
-#### Setting the initial block number (recommended)
-
-Open `hasura/migrations/unicrow/1726203142180_squashed/up.sql`
-
-Replace `0` with the block number where indexing should start e.g. the launch of your marketplace, or few blocks before the deployment of Unicrow on that specific network.
-
-```
-INSERT INTO last_block_number (block_number) VALUES (0);
-```
-
-#### Setting the Marketplace addresses
-
-Open `hasura/migrations/unicrow/1726203142180_squashed/up.sql`
-
-Replace `*` with your marketplace's address. To add multiple addresses, duplicate the line.
-
-```
-INSERT INTO marketplace (address) VALUES ('*');
-```
 
 ### Build and run a full local environment using Docker Compose
 

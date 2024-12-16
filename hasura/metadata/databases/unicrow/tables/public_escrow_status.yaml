@@ -5,47 +5,48 @@ select_permissions:
   - role: anonymous
     permission:
       columns:
-        - arbitrated
-        - claimed
-        - created_at
-        - block_number
-        - challenged_at
-        - consensus_buyer
-        - consensus_seller
-        - latest_settlement_offer_buyer
-        - latest_settlement_offer_seller
-        - paid_at
-        - refunded_at
-        - released_at
-        - settled_at
-        - split_buyer
-        - split_marketplace
-        - split_protocol
-        - split_seller
         - amount
         - amount_arbitrator
         - amount_buyer
         - amount_marketplace
         - amount_protocol
         - amount_seller
+        - arbitrated
+        - arbitrator
         - arbitrator_fee
+        - arbitrator_proposer
+        - block_number
+        - buyer
         - challenge_period
         - challenge_period_end
         - challenge_period_extension
         - challenge_period_start
-        - escrow_id
-        - marketplace_fee
-        - arbitrator
-        - arbitrator_proposer
-        - buyer
+        - challenged_at
+        - claimed
+        - consensus_buyer
+        - consensus_seller
+        - created_at
         - currency
         - deposit_transaction_hash
+        - escrow_id
         - id
         - latest_settlement_offer_address
+        - latest_settlement_offer_buyer
+        - latest_settlement_offer_seller
         - marketplace
+        - marketplace_fee
         - name
+        - chain_id
+        - paid_at
         - payment_reference
+        - refunded_at
+        - released_at
         - seller
+        - settled_at
+        - split_buyer
+        - split_marketplace
+        - split_protocol
+        - split_seller
         - status_arbitration
         - transaction_hash
       filter: {}

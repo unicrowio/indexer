@@ -3,7 +3,7 @@ import { GraphQLClient } from "graphql-request";
 import config from "../env.js";
 import logger from "../infra/logger.js";
 
-logger.info(`🎧 - HASURA_GRAPHQL_URL: ${config.HASURA_GRAPHQL_URL}`);
+logger.info(`HASURA_GRAPHQL_URL: ${config.HASURA_GRAPHQL_URL}`);
 
 const client = new GraphQLClient(config.HASURA_GRAPHQL_URL, {
   headers: {
