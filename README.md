@@ -4,6 +4,8 @@
 
 The indexer keeps an up-to-date record of all escrowed payments relevant to platforms integrating Unicrow. It does it by listening to events from Unicrow smart contracts and optionally filtering them by marketplace addresses.
 
+The indexer supports all the chains that Unicrow is deployed at, currently Arbitrum and Base and their Sepolia testnets. You can enable or disable indexing from the networks in the configuration file (see below).
+
 Check out [Unicrow SDK Tutorial](https://github.com/unicrowio/sdk-tutorial) to learn how to query the indexed data.
 
 ## Getting Started
@@ -28,10 +30,10 @@ It is then critical for you to:
 
 Open `hasura/migrations/unicrow/1726203142180_squashed/up.sql`
 
-Replace `0` with the block number where indexing should start e.g. the launch of your marketplace, or few blocks before the deployment of Unicrow on that specific network.
+Replace `0` with the block number where indexing should start e.g. the launch of your marketplace on that specific network. Also replace 42161 with other chain you want to index or add multiple lines for multiple networks.
 
 ```
-INSERT INTO last_block_number (block_number) VALUES (0);
+INSERT INTO last_block_number (chain_id, block_number) VALUES ("42161", 0); -- 
 ```
 
 #### Setting the Marketplace addresses
