@@ -105,8 +105,17 @@ export const parse = (chainId: string, e: IEvent) => {
   const consensus = escrow?.[position.CONSENSUS];
   const split = escrow?.[position.SPLIT];
 
+  // Ethers is throwing an exception if a string field contains any invalid bytes (non UTF-8)
+  let payment_reference = null;
+  try {
+    payment_reference = escrow?.[position.PAYMENT_REFERENCE];
+  } catch (err) {
+    logger.error(
+      `[${chainId}] Ignoring invalid payment_reference string in event: ${e.fragment.name} tx: ${transaction_hash}`,
+    );
+  }
+
   const amount = escrow?.[position.AMOUNT];
-  const payment_reference = escrow?.[position.PAYMENT_REFERENCE];
   const currency = escrow?.[position.CURRENCY];
   const marketplace = escrow?.[position.MARKETPLACE];
   const marketplace_fee = escrow?.[position.MARKETPLACE_FEE];
