@@ -110,8 +110,9 @@ export const parse = (chainId: string, e: IEvent) => {
   try {
     payment_reference = escrow?.[position.PAYMENT_REFERENCE];
   } catch (err) {
+    payment_reference = "invalid_string";
     logger.error(
-      `[${chainId}] Ignoring invalid payment_reference string in event: ${e.fragment.name} tx: ${transaction_hash}`,
+      `[${chainId}] Failed to parse invalid payment_reference string in event: ${e.fragment.name} tx: ${transaction_hash}`,
     );
   }
 
