@@ -73,3 +73,8 @@ docker system prune -a --volumes
 
 </p>
 </details>
+
+## 🚢 Deploy using Heroku CLI
+
+1. Set remote: `heroku git:remote -a <app_name>`
+2. Push a new commit/deploy: `git push heroku <branch>:master`
