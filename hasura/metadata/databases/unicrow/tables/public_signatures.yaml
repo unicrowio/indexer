@@ -1,0 +1,13 @@
+table:
+  name: signatures
+  schema: public
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - timestamp
+        - address
+        - message
+      filter: {}
+      allow_aggregations: true
+    comment: ""

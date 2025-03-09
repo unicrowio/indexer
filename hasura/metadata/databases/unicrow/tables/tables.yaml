@@ -2,3 +2,4 @@
 - "!include public_escrow_status_view.yaml"
 - "!include public_events.yaml"
 - "!include public_last_block_number.yaml"
+- "!include public_signatures.yaml"

@@ -1,5 +1,7 @@
 CREATE TABLE "public"."last_block_number" ("chain_id" text NOT NULL, "block_number" integer NOT NULL, PRIMARY KEY ("chain_id") , UNIQUE ("chain_id"));
 
+CREATE TABLE "public"."signatures" ("timestamp" bigint, address text, message text, PRIMARY KEY ("timestamp") , UNIQUE ("timestamp"));
+
 CREATE TABLE "public"."events" ("id" serial NOT NULL, "chain_id" text NOT NULL, "name" text NOT NULL, "transaction_hash" text NOT NULL,
 "block_number" integer NOT NULL, "escrow_id" numeric NOT NULL, "buyer" text, "seller" text,
 "currency" text, "amount" numeric, "split_seller" integer, "split_buyer" integer, "split_marketplace" integer,

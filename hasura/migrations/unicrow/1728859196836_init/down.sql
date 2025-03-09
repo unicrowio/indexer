@@ -11,5 +11,6 @@ DROP INDEX IF EXISTS "escrowid-indexer";
 DROP TABLE IF EXISTS "public"."events";
 DROP TABLE IF EXISTS "public"."escrow_status";
 DROP TABLE IF EXISTS "public"."last_block_number";
+DROP TABLE IF EXISTS "public"."signatures";
 
 DROP FUNCTION IF EXISTS generate_random_id(integer);
