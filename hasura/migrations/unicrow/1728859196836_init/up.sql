@@ -3,15 +3,15 @@ CREATE TABLE "public"."last_block_number" ("chain_id" text NOT NULL, "block_numb
 CREATE TABLE "public"."signatures" ("timestamp" bigint, address text, message text, PRIMARY KEY ("timestamp") , UNIQUE ("timestamp"));
 
 CREATE TABLE "public"."events" ("id" serial NOT NULL, "chain_id" text NOT NULL, "name" text NOT NULL, "transaction_hash" text NOT NULL,
-"block_number" integer NOT NULL, "escrow_id" numeric NOT NULL, "buyer" text, "seller" text,
-"currency" text, "amount" numeric, "split_seller" integer, "split_buyer" integer, "split_marketplace" integer,
+"block_number" integer NOT NULL, "escrow_id" text NOT NULL, "buyer" text, "seller" text,
+"currency" text, "amount" text, "split_seller" integer, "split_buyer" integer, "split_marketplace" integer,
 "split_protocol" integer, "consensus_seller" integer, "consensus_buyer" integer,
-"marketplace" text, "marketplace_fee" numeric, "challenge_period" numeric null, "challenge_period_start" numeric null,
+"marketplace" text, "marketplace_fee" text, "challenge_period" numeric null, "challenge_period_start" numeric null,
 "challenge_period_end" numeric null,"challenge_period_extension" numeric null,
-"created_at" integer null, "arbitrator" text null, "arbitrator_fee" numeric null, "arbitrator_proposer" text null,
+"created_at" integer null, "arbitrator" text null, "arbitrator_fee" text null, "arbitrator_proposer" text null,
 "latest_settlement_offer_address" text null, "latest_settlement_offer_seller" integer null, "latest_settlement_offer_buyer" integer null,
-"amount_seller" numeric null, "amount_buyer" numeric null, "amount_protocol" numeric null, "amount_arbitrator" numeric null,
-"amount_marketplace" numeric null, "payment_reference" text null, PRIMARY KEY ("id", "transaction_hash"), UNIQUE ("id"));
+"amount_seller" text null, "amount_buyer" text null, "amount_protocol" text null, "amount_arbitrator" text null,
+"amount_marketplace" text null, "payment_reference" text null, PRIMARY KEY ("id", "transaction_hash"), UNIQUE ("id"));
 
 CREATE  INDEX "buyer_indexer" ON
   "public"."events" using btree ("buyer");
@@ -43,17 +43,17 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TABLE "public"."escrow_status" ("id" text default generate_random_id(6) NOT NULL, "chain_id" text NOT NULL, "name" text NOT NULL, "escrow_id" numeric null, "transaction_hash" text null, "block_number" integer, "deposit_transaction_hash" text null,
- "buyer" text null, "seller" text NOT NULL, "currency" text NOT NULL, "amount" numeric NOT NULL, "split_seller" integer,
+CREATE TABLE "public"."escrow_status" ("id" text default generate_random_id(6) NOT NULL, "chain_id" text NOT NULL, "name" text NOT NULL, "escrow_id" text null, "transaction_hash" text null, "block_number" integer, "deposit_transaction_hash" text null,
+ "buyer" text null, "seller" text NOT NULL, "currency" text NOT NULL, "amount" text NOT NULL, "split_seller" integer,
  "split_buyer" integer, "split_marketplace" integer, "split_protocol" integer, "consensus_seller" integer null,
- "consensus_buyer" integer null, "marketplace" text null, "marketplace_fee" numeric null,
- "arbitrator" text null, "arbitrator_fee" numeric null, "arbitrator_proposer" text null, "status_arbitration" text null, "challenge_period" numeric null, "challenge_period_start" numeric null,
+ "consensus_buyer" integer null, "marketplace" text null, "marketplace_fee" text null,
+ "arbitrator" text null, "arbitrator_fee" text null, "arbitrator_proposer" text null, "status_arbitration" text null, "challenge_period" numeric null, "challenge_period_start" numeric null,
  "challenge_period_end" numeric null,"challenge_period_extension" numeric null, "created_at" date default now(), "paid_at" integer null, "released_at" integer null,
  "refunded_at" integer null, "settled_at" integer null, "challenged_at" integer null,
  "claimed" boolean NOT NULL DEFAULT false, "arbitrated" boolean NOT NULL DEFAULT false,
  "latest_settlement_offer_address" text null, "latest_settlement_offer_seller" integer null, "latest_settlement_offer_buyer" integer null,
- "amount_seller" numeric null, "amount_buyer" numeric null, "amount_protocol" numeric null, "amount_arbitrator" numeric null,
- "amount_marketplace" numeric null, "payment_reference" text null, PRIMARY KEY ("id"), UNIQUE ("id"), UNIQUE ("deposit_transaction_hash"));
+ "amount_seller" text null, "amount_buyer" text null, "amount_protocol" text null, "amount_arbitrator" text null,
+ "amount_marketplace" text null, "payment_reference" text null, PRIMARY KEY ("id"), UNIQUE ("id"), UNIQUE ("deposit_transaction_hash"));
 
 CREATE OR REPLACE FUNCTION update_escrow_status()
   RETURNS trigger AS $BODY$

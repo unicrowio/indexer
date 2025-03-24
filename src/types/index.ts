@@ -16,7 +16,7 @@ export type EventMutationInput = {
   name: EventName;
   transaction_hash: string;
   block_number: number;
-  escrow_id: number;
+  escrow_id: string;
   buyer?: string;
   seller?: string;
   currency?: string | null;
@@ -39,11 +39,11 @@ export type EventMutationInput = {
   latest_settlement_offer_address?: string | null;
   latest_settlement_offer_seller?: number | null;
   latest_settlement_offer_buyer?: number | null;
-  amount_seller?: number | null;
-  amount_buyer?: number | null;
-  amount_protocol?: number | null;
-  amount_arbitrator?: number | null;
-  amount_marketplace?: number | null;
+  amount_seller?: string | null;
+  amount_buyer?: string | null;
+  amount_protocol?: string | null;
+  amount_arbitrator?: string | null;
+  amount_marketplace?: string | null;
   payment_reference?: string | null;
 };
 

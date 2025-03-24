@@ -36,7 +36,7 @@ const parseClaim = (chainId: string, e: IEvent): EventMutationInput => {
     name: Event.Claim,
     transaction_hash: e.transactionHash,
     block_number: e.blockNumber,
-    escrow_id: Number(escrow_id),
+    escrow_id: escrow_id.toString(),
     amount_buyer: amount_buyer.toString(),
     amount_seller: amount_seller.toString(),
     amount_marketplace: amount_marketplace.toString(),
@@ -65,7 +65,7 @@ const parseClaimMultiple = (
       name: Event.Claim,
       transaction_hash: `${e.transactionHash}_${escrow_id.toString()}`,
       block_number: e.blockNumber,
-      escrow_id: Number(escrow_id),
+      escrow_id: escrow_id.toString(),
       amount_buyer: amount_buyer.toString(),
       amount_seller: amount_seller.toString(),
       amount_marketplace: amount_marketplace.toString(),
@@ -87,7 +87,7 @@ export const parse = (chainId: string, e: IEvent) => {
     return parseClaim(chainId, e);
   }
 
-  const escrow_id = Number(e.args.escrowId);
+  const escrow_id = e.args.escrowId;
   const escrow = e.args.escrow;
   const transactionHash = e.transactionHash;
   const blockNumber = e.blockNumber;
@@ -180,7 +180,7 @@ export const parse = (chainId: string, e: IEvent) => {
     name,
     transaction_hash,
     block_number,
-    escrow_id,
+    escrow_id: escrow_id.toString(),
     buyer,
     seller,
     marketplace: marketplace === ZERO_ADDRESS ? undefined : marketplace,
