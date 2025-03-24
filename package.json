@@ -1,7 +1,7 @@
 {
   "name": "@unicrow/indexer-api",
   "description": "unicrow listener events from unicrow-contract and store it on hasura postgres",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "author": "Unicrow Team <hello@unicrow.io>",
   "license": "MIT",
   "main": "src/index.ts",
