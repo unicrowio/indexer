@@ -9,7 +9,7 @@ import { EventMutationInput } from "../types/index.js";
 import logger from "../infra/logger.js";
 
 // Number of blocks per query
-const LIMIT = 5000;
+const LIMIT = 500;
 
 export const storeEvents = async (
   provider: ethers.JsonRpcProvider,
